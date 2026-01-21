@@ -14,6 +14,9 @@ class _SignuppageState extends State<Signuppage> {
   String selectedRole = "customer";
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailcontroller = TextEditingController();
+    TextEditingController passwordcontroller = TextEditingController();
+    TextEditingController confirmpasswordcontroller = TextEditingController();
     final dh = MediaQuery.of(context).size.height;
     final dw = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -32,13 +35,14 @@ class _SignuppageState extends State<Signuppage> {
                 ),
               ),
               SizedBox(height: dh * 0.01),
-              InputTextfieldState(logo: 'email', passwordfield: false),
+              InputTextfieldState(logo: 'email', passwordfield: false ,controller: emailcontroller,),
               SizedBox(height: dh * 0.01),
-              InputTextfieldState(logo: 'password', passwordfield: true),
+              InputTextfieldState(logo: 'password', passwordfield: true, controller: passwordcontroller,),
               SizedBox(height: dh * 0.01),
               InputTextfieldState(
                 logo: 'Confirm your password',
                 passwordfield: true,
+                controller: confirmpasswordcontroller,
               ),
               SizedBox(height: dh * 0.015),
               Row(

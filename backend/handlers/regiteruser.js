@@ -38,6 +38,7 @@ async function registerUser(req, res) {
       id: result.insertId,
       email: email,
       status: 201,
+      message: 'success'
     });
   } catch (e) {
     if (e.code === "ER_DUP_ENTRY") {
@@ -48,6 +49,7 @@ async function registerUser(req, res) {
     }
     return res.status(500).json({
       status: 500,
+      message: 'error'
     });
   }
 }

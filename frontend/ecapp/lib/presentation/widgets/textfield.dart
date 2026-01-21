@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class InputTextfieldState extends StatefulWidget {
   final String logo;
   final bool passwordfield;
-  const InputTextfieldState({super.key, required this.logo, required this.passwordfield});
+  final TextEditingController controller;
+  const InputTextfieldState({super.key, required this.logo, required this.passwordfield, required this.controller});
 
   @override
   State<InputTextfieldState> createState() => _InputTextfieldStateState();
@@ -15,6 +16,7 @@ class _InputTextfieldStateState extends State<InputTextfieldState> {
   Widget build(BuildContext context) {
     final bool isEmail = widget.logo == 'email';
     return TextField(
+      controller:widget.controller,
       obscureText: isEmail ? false: obscurePassword,
       style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
