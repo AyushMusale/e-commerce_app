@@ -23,14 +23,40 @@ class _LoginpageState extends State<Loginpage> {
     return BlocConsumer<Authbloc, Authstate>(
       listener: (context, state) {
         if (state is AuthstateSucces) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("Successfull login")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Successfull login",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
         if (state is AuthstateFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message!),
+              content: Text(
+                state.message!,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              duration: Duration(seconds: 2),
             ),
           );
         }
@@ -55,9 +81,17 @@ class _LoginpageState extends State<Loginpage> {
                     ),
                   ),
                   SizedBox(height: dh * 0.01),
-                  InputTextfieldState(logo: 'email', passwordfield: false, controller: emailcontroller,),
+                  InputTextfieldState(
+                    logo: 'email',
+                    passwordfield: false,
+                    controller: emailcontroller,
+                  ),
                   SizedBox(height: dh * 0.01),
-                  InputTextfieldState(logo: 'password', passwordfield: true, controller: passwordcontroller,),
+                  InputTextfieldState(
+                    logo: 'password',
+                    passwordfield: true,
+                    controller: passwordcontroller,
+                  ),
                   SizedBox(height: dh * 0.01),
                   SizedBox(
                     height: dh * 0.05,

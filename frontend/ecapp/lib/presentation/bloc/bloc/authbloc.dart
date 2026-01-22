@@ -13,7 +13,7 @@ class Authbloc extends Bloc<Authevent, Authstate> {
         emit(AuthstateSucces(authUser: user));
        }
       catch(e){
-          emit(AuthstateFailed(message: e.toString()));
+          emit(AuthstateFailed(message: e.toString().replaceFirst('Exception: ', "")));
       }
     });
    }

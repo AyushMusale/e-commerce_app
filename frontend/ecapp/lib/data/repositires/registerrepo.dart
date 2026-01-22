@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:ecapp/data/models/registermodel.dart';
-import 'package:ecapp/domain/entities/user.dart';
 import 'package:http/http.dart' as http;
 
 class Registerrepo {
@@ -15,7 +12,7 @@ class Registerrepo {
     required String confirmpassword,
     required String selectedrole,
   }) async {
-    final url = Uri.parse("");
+    final url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/signup");
 
     final res = await client.post(
       url,
