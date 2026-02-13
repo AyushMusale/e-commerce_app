@@ -1,4 +1,5 @@
 import 'package:ecapp/presentation/pages/seller_pages/homepage.dart';
+import 'package:ecapp/presentation/pages/seller_pages/productspage.dart';
 import 'package:flutter/material.dart';
 
 class SellerNavigationpage extends StatefulWidget {
@@ -9,10 +10,10 @@ class SellerNavigationpage extends StatefulWidget {
 }
 
 class _SellerNavigationpageState extends State<SellerNavigationpage> {
+    final List<dynamic> pages = [SellerHomepage(), SellerProductpage()];
+    int currrentindex = 0;
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> pages = [SellerHomepage()];
-    int currrentindex = 0;
     return Scaffold(
       body: pages[currrentindex],
       bottomNavigationBar: BottomNavigationBar(

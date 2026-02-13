@@ -40,7 +40,7 @@ class _LoginpageState extends State<Loginpage> {
               duration: Duration(seconds: 2),
             ),
           );
-          context.pushReplacementNamed("sellerhomepage");
+          context.pushReplacementNamed("sellernavigationpage");
         }
         if (state is AuthstateFailed) {
           ScaffoldMessenger.of(context).showSnackBar(

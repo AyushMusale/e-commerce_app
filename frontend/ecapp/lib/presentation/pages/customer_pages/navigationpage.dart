@@ -11,7 +11,7 @@ class CustomerNavigationpage extends StatefulWidget {
 class _CustomerNavigationpageState extends State<CustomerNavigationpage> {
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> pages = [CustomerHomepage()];
+    final List<dynamic> pages = [CustomerHomepage(), ];
     int currrentindex = 0;
     return Scaffold(
       body: pages[currrentindex],
