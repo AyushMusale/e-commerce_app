@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const reg_router =  require("./routes/registration")
-const login_router = require('./routes/login')
+const auth_router = require('./routes/auth')
 const seller_router = require('./routes/seller')
 const {jwtAuth} = require('./services/jwtAuth')
+const { checkusersession } = require("./middleware/checkusersession");
 
 const mongoose = require('mongoose')
 
@@ -18,9 +18,9 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use(express.json())
 
-app.use('/api/ECAPP/signup', reg_router)
-app.use('/api/ECAPP/login', login_router)
-app.use('/api/ECAPP/seller', jwtAuth,seller_router)
+app.use('/api/ECAPP/auth', auth_router)
+app.use('/api/ECAPP/seller', jwtAuth, checkusersession ,seller_router)
+
 app.post('/api/ECAPP/test', jwtAuth, (req,res)=>{
     return res.json({
         'status': 'working',
