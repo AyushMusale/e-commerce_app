@@ -5,6 +5,7 @@ import 'package:ecapp/data/router/router.dart';
 import 'package:ecapp/domain/usecases/authusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
 import 'package:ecapp/presentation/bloc/bloc/authBloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +34,8 @@ class MainApp extends StatelessWidget {
           create: (context) => Authbloc(authusecase),
           child: Container(),
         ),
-        BlocProvider(create: (_)=>Registerbloc(registerusecase))
+        BlocProvider(create: (_)=>Registerbloc(registerusecase)),
+        BlocProvider(create: (_)=>Imagepickerbloc())
       ],
       child: MaterialApp.router(
         routerConfig: router,

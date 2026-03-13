@@ -22,7 +22,7 @@ class Authrepo extends Authrepointf {
     final jsonRes = jsonDecode(res.body);
     if(res.statusCode==200 || res.statusCode==201){
       authDB.store(jsonRes['token']);
-      return AuthDetails(email: jsonRes['user']['email'], token: jsonRes['token'], message: 'success');
+      return AuthDetails(token: jsonRes['token'], message: 'success');
     }
     else{
       throw Exception(jsonRes['message'] ?? 'login-failed');
