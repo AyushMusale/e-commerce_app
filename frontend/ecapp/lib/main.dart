@@ -10,32 +10,48 @@ import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
 import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('authDb');
-  runApp(const MainApp());
+
+  final authDB = AuthDB();
+  final authrepo = Authrepo(authDB);
+  final authusecase = Authusecase(authrepo);
+  final registerrepo = Registerrepo();
+  final registerusecase = Registerusecase(registerrepo);
+  final authbloc = Authbloc(authusecase, authDB)..add(AuthChecksession());
+  final router = createRouter(authbloc);
+
+  runApp(MainApp(
+    authbloc: authbloc,
+    router: router,
+    registerusecase: registerusecase,
+  ));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final Authbloc authbloc;
+  final GoRouter router;
+  final Registerusecase registerusecase;
+
+  const MainApp({
+    super.key,
+    required this.authbloc,
+    required this.router,
+    required this.registerusecase,
+  });
 
   @override
   Widget build(BuildContext context) {
-  AuthDB authDB = AuthDB();
-  Authrepo authrepo = Authrepo(authDB);
-  Authusecase authusecase = Authusecase(authrepo);
-  Registerrepo registerrepo = Registerrepo();
-  Registerusecase registerusecase = Registerusecase(registerrepo);
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_)=>Authbloc(authusecase, authDB)..add(AuthChecksession()),
-        ),
-        BlocProvider(create: (_)=>Registerbloc(registerusecase)),
-        BlocProvider(create: (_)=>Imagepickerbloc())
+        BlocProvider.value(value: authbloc),
+        BlocProvider(create: (_) => Registerbloc(registerusecase)),
+        BlocProvider(create: (_) => Imagepickerbloc()),
       ],
       child: MaterialApp.router(
         routerConfig: router,

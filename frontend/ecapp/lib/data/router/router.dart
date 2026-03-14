@@ -7,15 +7,16 @@ import 'package:ecapp/presentation/pages/seller_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/productformpage.dart';
 import 'package:ecapp/presentation/pages/signuppage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ecapp/utils/gorouterstreamnotifier.dart';
 
-final GoRouter router = GoRouter(
+GoRouter createRouter(Authbloc authbloc)=> GoRouter(
   initialLocation: '/login',
+  refreshListenable: GoRouterRefreshStream(authbloc.stream),
   redirect: (BuildContext context, GoRouterState state) {
-    
-    final Authstate authstate =context.read<Authbloc>().state;
+    final Authstate authstate =authbloc.state;
     final currentpath = state.matchedLocation;
+    if (authstate is AuthstateInitial) return null;
     if(authstate is AuthstateSucces){
       if(currentpath == '/login' || currentpath == '/signup'){
         return "/seller/navgationpage";
