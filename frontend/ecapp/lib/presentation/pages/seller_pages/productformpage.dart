@@ -4,6 +4,7 @@ import 'package:ecapp/presentation/bloc/state/imagestate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ecapp/presentation/widgets/radiobutton.dart';
+import 'package:ecapp/presentation/widgets/shadowcontainer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Productformpage extends StatefulWidget {
@@ -22,8 +23,9 @@ class _ProductformpageState extends State<Productformpage> {
     final dh = MediaQuery.of(context).size.height;
     // final dw = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -36,32 +38,35 @@ class _ProductformpageState extends State<Productformpage> {
                   ),
                 ),
                 SizedBox(height: dh * 0.02),
-                TextField(
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Name",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                ShadowContainer(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Name",
+                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: dh * 0.01),
-                TextField(
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                  ],
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Price",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                ShadowContainer(
+                  child: TextField(
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
                     ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                    ],
+                    decoration: InputDecoration(
+                      labelText: "Price",
+                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -69,7 +74,7 @@ class _ProductformpageState extends State<Productformpage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Category", style: TextStyle(fontSize: dh * 0.02)),
+                    Text("Category", style: TextStyle(fontSize: dh * 0.03, fontWeight: FontWeight.bold, color: Colors.black)),
                     Wrap(
                       spacing: 8,
                       children: List.generate(categories.length, (index) {
@@ -99,13 +104,15 @@ class _ProductformpageState extends State<Productformpage> {
                                 color:
                                     isSelected
                                         ? Colors.blue
-                                        : const Color.fromARGB(
-                                          255,
-                                          231,
-                                          231,
-                                          231,
-                                        ),
+                                        : const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.4),
+                                    blurRadius: 2,
+                                    //offset: Offset(2, 2)
+                                  )
+                                ]
                               ),
                               child: Text(
                                 categories[index],
@@ -125,7 +132,7 @@ class _ProductformpageState extends State<Productformpage> {
                       children: [
                         Text(
                           "Product in Stock? ",
-                          style: TextStyle(fontSize: dh * 0.02),
+                          style: TextStyle(fontSize: dh * 0.025, fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         Row(
                           children: [
