@@ -7,6 +7,7 @@ import 'package:ecapp/domain/usecases/registerusecase.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
+import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -31,7 +32,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_)=>Authbloc(authusecase, authDB),
+          create: (_)=>Authbloc(authusecase, authDB)..add(AuthChecksession()),
         ),
         BlocProvider(create: (_)=>Registerbloc(registerusecase)),
         BlocProvider(create: (_)=>Imagepickerbloc())
