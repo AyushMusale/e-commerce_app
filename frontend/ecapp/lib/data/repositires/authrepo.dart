@@ -8,6 +8,7 @@ class Authrepo extends Authrepointf {
   AuthDB authDB;
   Authrepo(this.authDB);
 
+  @override
   Future<AuthDetails> execute({required String email, required String password}) async {
     Uri url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/login");
     final res = await http.post(
@@ -21,8 +22,9 @@ class Authrepo extends Authrepointf {
 
     final jsonRes = jsonDecode(res.body);
     if(res.statusCode==200 || res.statusCode==201){
-      authDB.store(jsonRes['token']);
-      return AuthDetails(token: jsonRes['token'], message: 'success');
+      authDB.storeAccessToken(jsonRes['access_token']);
+      authDB.storeRefreshToken(jsonRes['refresh_token']);
+      return AuthDetails(accessToken: jsonRes['access_token'], refreshToken: jsonRes["refresh_token"],message: 'success');
     }
     else{
       throw Exception(jsonRes['message'] ?? 'login-failed');

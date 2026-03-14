@@ -1,3 +1,5 @@
+
+
 class Authevent {}
 
 class AuthLoginevent extends Authevent{
@@ -5,3 +7,5 @@ class AuthLoginevent extends Authevent{
   String password;
   AuthLoginevent({required this.email, required this.password});
 }
+
+class AuthChecksession extends Authevent{}

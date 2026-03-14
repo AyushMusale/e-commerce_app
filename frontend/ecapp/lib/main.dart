@@ -4,7 +4,7 @@ import 'package:ecapp/data/repositires/registerrepo.dart';
 import 'package:ecapp/data/router/router.dart';
 import 'package:ecapp/domain/usecases/authusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
-import 'package:ecapp/presentation/bloc/bloc/authBloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +31,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => Authbloc(authusecase),
-          child: Container(),
+          create: (_)=>Authbloc(authusecase, authDB),
         ),
         BlocProvider(create: (_)=>Registerbloc(registerusecase)),
         BlocProvider(create: (_)=>Imagepickerbloc())

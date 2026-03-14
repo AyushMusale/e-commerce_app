@@ -5,6 +5,7 @@ class Registerusecase {
   final Registerrepo registerrepo;
   Registerusecase(this.registerrepo);
 
+  // ignore: non_constant_identifier_names
   Future<Registermodel> execute({required String email, required String password, required String confirmpassword,required String user_role}){
     return registerrepo.execute(email: email, password: password, confirmpassword: confirmpassword, selectedrole: user_role);
   }

@@ -1,8 +1,10 @@
 class AuthDetails {
-  String token;
+  String accessToken;
+  String refreshToken;
   String? message;
   AuthDetails({
-    required this.token,
+    required this.accessToken,
+    required this.refreshToken,
     required this.message,
   });
 }

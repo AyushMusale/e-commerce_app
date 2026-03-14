@@ -1,5 +1,4 @@
-
-import 'package:ecapp/presentation/bloc/bloc/authBloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
 import 'package:ecapp/presentation/pages/customer_pages/homepage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/navigationpage.dart';
@@ -14,6 +13,7 @@ import 'package:go_router/go_router.dart';
 final GoRouter router = GoRouter(
   initialLocation: '/login',
   redirect: (BuildContext context, GoRouterState state) {
+    
     final Authstate authstate =context.read<Authbloc>().state;
     final currentpath = state.matchedLocation;
     if(authstate is AuthstateSucces){
