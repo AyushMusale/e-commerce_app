@@ -65,7 +65,6 @@ async function loginUser(req, res) {
         expiresIn: "15d",
       },
     );
-
     await pool.execute("UPDATE users set refresh_token = ? WHERE id = ?", [
       refToken,
       user.id,
@@ -75,12 +74,15 @@ async function loginUser(req, res) {
       status: 200,
       message: "successful-login",
       access_token: token,
+      refresh_token: refToken,
       user: {
         email: email,
         id: user.id,
+        user_role: user.user_role,
       },
     });
   } catch (e) {
+    console.log(e);
     return res.status(500).json({
       status: 500,
       message: "login-failed",

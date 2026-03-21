@@ -3,7 +3,8 @@
 abstract class Authstate {}
 
 class AuthstateSucces extends Authstate {
-  AuthstateSucces();
+  String? userRole;
+  AuthstateSucces({required this.userRole});
 }
 
 class AuthstateFailed extends Authstate {

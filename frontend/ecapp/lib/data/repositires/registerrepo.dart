@@ -12,7 +12,7 @@ class Registerrepo {
     required String confirmpassword,
     required String selectedrole,
   }) async {
-    final url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/signup");
+    final url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/auth/signup");
 
     final res = await client.post(
       url,

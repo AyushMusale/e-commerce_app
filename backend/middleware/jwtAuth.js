@@ -1,35 +1,40 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
-function jwtAuth(req,res,next){
-    const authHeader = req.headers.authorization;
 
-    if(!authHeader){
-        return res.status(401).json({
-            status: 401,
-            message: 'missing-token'
-        });
-    }
-    const parts = authHeader.split(" ");
-    if(parts.length !== 2  || parts[0] !== 'Bearer'){
-        return res.status(401).json({
-            status: 401,
-            message: 'invalid-token-format',
-        })
-    }
-    const token = authHeader.split(" ")[1];
+function jwtAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "access-token-required",
+    });
+  }
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") {
+    return res.status(401).json({
+      status: 401,
+      message: "invalid-token-format",
+    });
+  }
+  const token = parts[1];
 
-    try{
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('middlware', process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (e) {
+    if (e.name === "TokenExpiredError")
+      return res.status(401).json({
+        message: "access-token-expired",
+      });
 
-        req.user = decoded;
-        next();
-    }
-    catch(e){
-        return res.status(500).json({
-            status: 500,
-            message: 'invalid token'
-        })
-    }
+      console.log(err);
+    return res.status(401).json({
+      status: 401,
+      message: "access-token-invalid",
+    });
+  }
 }
 
-module.exports = {jwtAuth}
+module.exports = { jwtAuth };

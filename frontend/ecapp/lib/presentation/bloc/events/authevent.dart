@@ -9,3 +9,5 @@ class AuthLoginevent extends Authevent{
 }
 
 class AuthChecksession extends Authevent{}
+
+class LogoutEvent extends Authevent{}

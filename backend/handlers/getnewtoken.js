@@ -1,10 +1,13 @@
 const jwt = require("jsonwebtoken");
 const {pool} = require("../DBconnection")
 
+require("dotenv").config();
+
 //req constains refresh token,
 //check refresh token for validity if valid send new access token
 //if the req[refeshtoken] is expired send logout res
 async function getAccessToken(req, res) {
+  console.log("hit");
   try {
     const { refresh_token } = req.body;
     if (!refresh_token) {
@@ -58,7 +61,7 @@ async function getAccessToken(req, res) {
       newRefreshToken,
       user.id,
     ]);
-    return res.json({
+    return res.status(200).json({
       "access_token": newAccessToken,
       "refresh_token": newRefreshToken,
     });

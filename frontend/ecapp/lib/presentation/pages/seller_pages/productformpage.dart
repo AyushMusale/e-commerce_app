@@ -1,11 +1,48 @@
+import 'dart:io';
+
+import 'package:ecapp/data/models/product.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
 import 'package:ecapp/presentation/bloc/events/imagepickerevent.dart';
+import 'package:ecapp/presentation/bloc/events/newproductevent.dart';
 import 'package:ecapp/presentation/bloc/state/imagestate.dart';
+import 'package:ecapp/presentation/bloc/state/newproductstate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ecapp/presentation/widgets/radiobutton.dart';
-import 'package:ecapp/presentation/widgets/shadowcontainer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+Widget stockButton(String text, bool selected, VoidCallback onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: selected ? Colors.blue : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.blue),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: selected ? Colors.white : Colors.black),
+      ),
+    ),
+  );
+}
+
+Widget buildInputCard({required Widget child}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 14),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6),
+      ],
+    ),
+    child: child,
+  );
+}
 
 class Productformpage extends StatefulWidget {
   const Productformpage({super.key});
@@ -15,201 +52,318 @@ class Productformpage extends StatefulWidget {
 }
 
 class _ProductformpageState extends State<Productformpage> {
-  final categories = ["Electronics", "Mobile", "Accessories", "Fashion"];
   final Set<int> selectedIndexes = {};
+  final List<String> category = [];
   bool inStock = true;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final categories = ["Electronics", "Mobile", "Accessories", "Fashion"];
     final dh = MediaQuery.of(context).size.height;
-    // final dw = MediaQuery.of(context).size.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Text(
-                  "Add a new product",
-                  style: TextStyle(
-                    fontSize: dh * 0.03,
-                    fontWeight: FontWeight.bold,
-                  ),
+
+    //final dw = MediaQuery.of(context).size.width;
+    return BlocListener<Newproductbloc, Newproductstate>(
+      listener: (context, state) {
+        if (state is NewproductstateFailed) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+        if (state is NewproductstateSuccess) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Product added")));
+        }
+      },
+      child: BlocBuilder<Newproductbloc, Newproductstate>(
+        builder: (context, state) {
+          if (state is NewproductstatePending) {
+            return Scaffold(body: CircularProgressIndicator());
+          }
+
+          if (state is NewproductstateFailed) {
+            if (state.message == 'logout') {
+              context.pushReplacementNamed("loginpage");
+            }
+          }
+
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F7FB),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
                 ),
-                SizedBox(height: dh * 0.02),
-                ShadowContainer(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Name",
-                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: dh * 0.01),
-                ShadowContainer(
-                  child: TextField(
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: "Price",
-                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: dh * 0.02),
-                Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Category", style: TextStyle(fontSize: dh * 0.03, fontWeight: FontWeight.bold, color: Colors.black)),
+                    Text(
+                      "Add Product",
+                      style: TextStyle(
+                        fontSize: dh * 0.035,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    buildInputCard(
+                      child: TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          hintText: "Product Name",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    buildInputCard(
+                      child: TextField(
+                        controller: priceController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d*$'),
+                          ),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: "Price",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Text(
+                      "Category",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
                     Wrap(
-                      spacing: 8,
+                      spacing: 10,
+                      runSpacing: 10,
                       children: List.generate(categories.length, (index) {
                         final isSelected = selectedIndexes.contains(index);
 
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              if (isSelected) {
-                                setState(() {
-                                  selectedIndexes.remove(index);
-                                });
-                              } else {
-                                setState(() {
-                                  selectedIndexes.add(index);
-                                });
-                              }
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(8),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    isSelected
-                                        ? Colors.blue
-                                        : const Color.fromARGB(255, 255, 255, 255),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
+                        return GestureDetector(
+                          onTap: () {
+                            if (isSelected) {
+                              setState(() {
+                                selectedIndexes.remove(index);
+                                category.remove(categories[index]);
+                              });
+                            } else {
+                              setState(() {
+                                selectedIndexes.add(index);
+                                category.add(categories[index]);
+                              });
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected ? Colors.blue : Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: Colors.blue),
+                              boxShadow: [
+                                if (isSelected)
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.4),
-                                    blurRadius: 2,
-                                    //offset: Offset(2, 2)
-                                  )
-                                ]
-                              ),
-                              child: Text(
-                                categories[index],
-                                style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    color: Colors.blue.withValues(alpha: 0.3),
+                                    blurRadius: 6,
+                                  ),
+                              ],
+                            ),
+                            child: Text(
+                              categories[index],
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
                         );
                       }),
                     ),
-                    SizedBox(height: dh * 0.02),
+
+                    const SizedBox(height: 20),
+
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Product in Stock? ",
-                          style: TextStyle(fontSize: dh * 0.025, fontWeight: FontWeight.bold, color: Colors.black),
+                          "In Stock",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         Row(
                           children: [
-                            Radiobutton(
-                              ontap: () {
-                                setState(() {
-                                  inStock = true;
-                                });
-                              },
-                              isSelected: inStock,
-                              title: "Yes",
-                            ),
-                            SizedBox(width: dh * 0.02),
-                            Radiobutton(
-                              ontap: () {
-                                setState(() {
-                                  inStock = false;
-                                });
-                              },
-                              isSelected: !inStock,
-                              title: "No",
-                            ),
+                            stockButton("Yes", inStock, () {
+                              setState(() => inStock = true);
+                            }),
+                            const SizedBox(width: 10),
+                            stockButton("No", !inStock, () {
+                              setState(() => inStock = false);
+                            }),
                           ],
                         ),
                       ],
                     ),
-                    SizedBox(height: dh * 0.02),
-                    Text("Add Images: ", style: TextStyle(fontSize: dh * 0.02)),
-                    SizedBox(height: dh * 0.005),
+
+                    const SizedBox(height: 25),
+
+                    Text(
+                      "Images",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
                     BlocBuilder<Imagepickerbloc, ImageState>(
                       builder: (context, state) {
-                        return InkWell(
+                        List<File> images = [];
+                        if (state is ImagestateSuccess) {
+                          images = List.from(state.Images);
+                        }
+
+                        return GestureDetector(
                           onTap: () {
-                            context.read<Imagepickerbloc>().add(
-                              Imagepickerevent(),
-                            );
+                            if (images.length > 4) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Cannot add more Images"),
+                                ),
+                              );
+                            } else {
+                              context.read<Imagepickerbloc>().add(
+                                Imagepickerevent(),
+                              );
+                            }
                           },
                           child: Container(
-                            height: dh * 0.15,
+                            height: 120,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(150, 165, 198, 255),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(12),
                               border: Border.all(color: Colors.blue),
+                              color: Colors.blue.withValues(alpha: 0.05),
                             ),
                             child: Center(
-                              child: Container(
-                                height: dh * 0.06,
-                                width: dh * 0.06,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.black),
-                                  color: Colors.white,
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.add_a_photo_outlined,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
+                              child: Icon(Icons.add_a_photo, size: 30),
                             ),
                           ),
                         );
                       },
                     ),
-                    SizedBox(height: dh * 0.02),
-                    Text(
-                      "Preview Images: ",
-                      style: TextStyle(fontSize: dh * 0.02),
+
+                    const SizedBox(height: 15),
+
+                    BlocBuilder<Imagepickerbloc, ImageState>(
+                      builder: (context, state) {
+                        List<File> images = [];
+                        if (state is ImagestateSuccess) {
+                          images = List.from(state.Images);
+                        }
+
+                        return SizedBox(
+                          height: 100,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: images.length,
+                            separatorBuilder:
+                                (_, __) => const SizedBox(width: 10),
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  images[index],
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
+
+                    const SizedBox(height: 30),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          List<File> imagesList;
+                          if (nameController.text.isEmpty ||
+                              priceController.text.isEmpty) {
+                            return;
+                          }
+
+                          final imageState =
+                              context.read<Imagepickerbloc>().state;
+
+                          if (imageState is ImagestateSuccess) {
+                            imagesList = imageState.Images;
+                            final Product product = Product(
+                              name: nameController.text.trim().toLowerCase(),
+                              price: priceController.text.trim(),
+                              category: category,
+                              inStock: inStock,
+                              images: imagesList,
+                            );
+                            context.read<Newproductbloc>().add(
+                              Newproductaddrequest(product),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Cannot add product")),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

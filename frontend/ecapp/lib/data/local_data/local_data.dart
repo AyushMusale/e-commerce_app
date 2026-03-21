@@ -12,6 +12,14 @@ class AuthDB {
     box.put('refresh_token', refreshToken);
   }
 
+  void storeUserrole(String userRole){
+    box.put('userRole', userRole);
+  }
+
+  String? getUserrole(){
+    return box.get('userRole');
+  }
+
   String? getAccessToken() {
     return box.get('access_token');
   }

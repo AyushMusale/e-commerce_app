@@ -30,8 +30,8 @@ async function registerUser(req, res) {
     const password_hash = await bcrypt.hash(password, 10);
 
     const [result] = await pool.execute(
-      "INSERT INTO users(email, password_hash, user_role) VALUES (?,?,?)",
-      [email, password_hash, user_role]
+      "INSERT INTO users(email, password_hash, user_role, refresh_token) VALUES (?,?,?,?)",
+      [email, password_hash, user_role, "no-refresh-token"]
     );
 
     return res.status(201).json({
@@ -41,6 +41,7 @@ async function registerUser(req, res) {
       message: 'success'
     });
   } catch (e) {
+    console.log("Register error", e)
     if (e.code === "ER_DUP_ENTRY") {
       return res.status(409).json({
         status: 409,

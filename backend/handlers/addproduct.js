@@ -2,20 +2,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const product = require("../models/product");
 
+
 async function addProduct(req, res) {
   try {
-    const { name, price, category, inStock, images } = req.body;
-
+    console.log('I a hit');
+    const { name, price, category, instock} = req.body;
     const sellerId = req.user.id;
+
+    const imgPath = req.files.map(file=>file.path);
+
 
     if (
       !name ||
       price === undefined ||
       !category ||
-      inStock === undefined||
-      !images ||
-      !Array.isArray(images)
+      instock === undefined
     ) {
+      console.log("fields missing")
       return res.status(400).json({
         status: 400,
         message: "fields-required",
@@ -25,10 +28,10 @@ async function addProduct(req, res) {
     const newProduct = await product.create({
       name,
       price,
-      category,
+      category: JSON.parse(category),
       sellerId,
-      inStock,
-      images,
+      inStock: JSON.parse(instock),
+      images: imgPath,
     });
 
     return res.status(201).json({
@@ -37,6 +40,7 @@ async function addProduct(req, res) {
       productId: newProduct._id,
     });
   } catch (e) {
+    console.log(e);
     return res.status(500).json({
       status: 500,
       message: "error",

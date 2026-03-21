@@ -40,7 +40,12 @@ class _LoginpageState extends State<Loginpage> {
               duration: Duration(seconds: 2),
             ),
           );
+          if(state.userRole == 'seller'){
           context.pushReplacementNamed("sellernavigationpage");
+          }
+          else{
+            context.pushReplacementNamed('customernavigationpage');
+          }
         }
         if (state is AuthstateFailed) {
           ScaffoldMessenger.of(context).showSnackBar(

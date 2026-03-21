@@ -6,9 +6,11 @@ import 'package:ecapp/presentation/pages/loginpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/productformpage.dart';
 import 'package:ecapp/presentation/pages/signuppage.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ecapp/utils/gorouterstreamnotifier.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
+
+
 
 GoRouter createRouter(Authbloc authbloc)=> GoRouter(
   initialLocation: '/login',
@@ -19,7 +21,7 @@ GoRouter createRouter(Authbloc authbloc)=> GoRouter(
     if (authstate is AuthstateInitial) return null;
     if(authstate is AuthstateSucces){
       if(currentpath == '/login' || currentpath == '/signup'){
-        return "/seller/navgationpage";
+        return "/seller/navigationpage";
       }
     }
     else{
@@ -51,12 +53,12 @@ GoRouter createRouter(Authbloc authbloc)=> GoRouter(
       builder: (context, state) => const CustomerHomepage(),
     ),
     GoRoute(
-      path: '/navgationpage',
+      path: '/navigationpage',
       name: 'customernavigationpage',
       builder: (context, state) => const CustomerNavigationpage(),
     ),
     GoRoute(
-      path: '/seller/navgationpage',
+      path: '/seller/navigationpage',
       name: 'sellernavigationpage',
       builder: (context, state) => const SellerNavigationpage(),
     ),

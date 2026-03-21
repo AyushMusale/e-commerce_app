@@ -16,10 +16,10 @@ class Imagepickerbloc extends Bloc<Imagepickerevent, ImageState> {
         }
         List<File> currentImages = [];
         if (state is ImagestateSuccess) {
-          currentImages = List.from((state as ImagestateSuccess).imageUrl);
+          currentImages = List.from((state as ImagestateSuccess).Images);
         }
         currentImages.add(file);
-        emit(ImagestateSuccess(imageUrl: currentImages));
+        emit(ImagestateSuccess(Images: currentImages));
       }
       catch(e){
         emit(ImagestateFailure(message: e.toString()));

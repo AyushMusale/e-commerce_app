@@ -1,5 +1,5 @@
 import 'package:ecapp/data/repositires/authrepo.dart';
-import 'package:ecapp/domain/entities/user.dart';
+import 'package:ecapp/domain/entities/authdetaills.dart';
 
 class Authusecase {
   final Authrepo _authrepo;
