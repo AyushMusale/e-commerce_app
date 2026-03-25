@@ -5,6 +5,7 @@ import 'package:ecapp/presentation/pages/customer_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/loginpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/productformpage.dart';
+import 'package:ecapp/presentation/pages/seller_pages/profilepage.dart';
 import 'package:ecapp/presentation/pages/signuppage.dart';
 import 'package:ecapp/utils/gorouterstreamnotifier.dart';
 import 'package:flutter/widgets.dart';
@@ -67,5 +68,8 @@ GoRouter createRouter(Authbloc authbloc)=> GoRouter(
       name: 'productformpage',
       builder: (context, state) => const Productformpage(),
     ),
+    GoRoute(path: '/seller/profile',
+    name: "sellerprofilepage",
+    builder: (context, state) => const SellerProfilepage(),)
   ],
 );

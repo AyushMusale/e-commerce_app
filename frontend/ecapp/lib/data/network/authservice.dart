@@ -11,7 +11,7 @@ class AuthService {
 
   String? get accessToken => authDB.getAccessToken();
   String? get refreshToken => authDB.getRefreshToken();
-  
+
   Future<bool> refreshTokenRequest() async {
     final url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/auth/token");
     final res = await http.post(
@@ -22,13 +22,17 @@ class AuthService {
         'refresh_token': refreshToken,
       }),
     );
+    print(res.statusCode);
     final jsonRes = jsonDecode(res.body);
-    if(res.statusCode == 200){
-      authDB.storeAccessToken(jsonRes['access_tokken']);
+    if (res.statusCode == 200) {
+      authDB.storeAccessToken(jsonRes['access_token']);
       authDB.storeRefreshToken(jsonRes['refresh_token']);
+      print("NEW TOKEN STORED: ${jsonRes['refresh_token']}");
+      print("TOKEN AFTER STORE: ${authDB.getRefreshToken()}");
       return true;
     }
-    if(res.statusCode == 401){
+    if (res.statusCode == 401) {
+      print(jsonRes['message']);
       throw RefreshTokenExpiredException();
     }
     return false;

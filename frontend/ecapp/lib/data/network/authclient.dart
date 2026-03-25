@@ -13,32 +13,37 @@ class AuthClient {
     Map<String, String>? headers,
     Object? body,
   }) async {
-    final newHeaders = {...?headers};
-    newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
-    newHeaders['Content-Type'] = 'application/json';
+    try {
+      if (authService.accessToken == null) {
+        throw UnauthenticatedException();
+      }
+      final newHeaders = {...?headers};
+      newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+      newHeaders['Content-Type'] = 'application/json';
 
-    if (authService.accessToken == null) {
-      throw UnauthenticatedException();
-    }
 
-    var res = await http.post(url, headers: newHeaders, body: body);
+      var res = await http.post(url, headers: newHeaders, body: body);
 
-    if (res.statusCode == 401) {
-      final jsonRes = jsonDecode(res.body);
-      if (jsonRes['message'] == "access-token-expired") {
-        bool refreshed = await authService.refreshTokenRequest();
-        if (refreshed) {
-          newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
-          return await http.post(url, headers: newHeaders, body: body);
-        } else {
+      if (res.statusCode == 401) {
+        final jsonRes = jsonDecode(res.body);
+        if (jsonRes['message'] == "access-token-expired") {
+          bool refreshed = await authService.refreshTokenRequest();
+          if (refreshed) {
+            newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+            return await http.post(url, headers: newHeaders, body: body);
+          } else {
+            throw UnauthenticatedException();
+          }
+        }
+        if (jsonRes['message'] == "access-token-invalid") {
           throw UnauthenticatedException();
         }
       }
-      if (jsonRes['message'] == "access-token-invalid") {
-        throw UnauthenticatedException();
-      }
+      return res;
+    } catch (e) {
+
+      rethrow;
     }
-    return res;
   }
 
   Future<http.StreamedResponse> multipartrRequest(
@@ -63,7 +68,7 @@ class AuthClient {
           if (!refreshed) {
             throw MulterReqException;
           }
-        } catch(e){
+        } catch (e) {
           rethrow;
         }
       }

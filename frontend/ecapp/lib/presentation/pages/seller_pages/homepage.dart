@@ -1,6 +1,8 @@
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/sellerprofile.dart';
 import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
+import 'package:ecapp/presentation/bloc/state/profilestate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,17 +17,21 @@ class SellerHomepage extends StatefulWidget {
 class _SellerHomepageState extends State<SellerHomepage> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<Authbloc, Authstate>(
+    return BlocBuilder<SellerPRofileBloc, SellerProfilestate>(
       builder: (context, state) {
-
-        if(state is AuthstateUnauthenticated){
+        if (state is AuthstateUnauthenticated) {
           context.pushReplacementNamed('login');
         }
         return Scaffold(
           appBar: AppBar(
-            leading: TextButton(onPressed: () {
-              context.read<Authbloc>().add(LogoutEvent());
-            }, child: Text("Logout")),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pushReplacementNamed("sellerprofilepage");
+                },
+                child: Text("Profile"),
+              ),
+            ],
           ),
           body: Center(child: Text("Welcome to the Home page")),
         );

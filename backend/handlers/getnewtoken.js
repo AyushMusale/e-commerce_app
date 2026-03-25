@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {pool} = require("../DBconnection")
+const { pool } = require("../DBconnection");
 
 require("dotenv").config();
 
@@ -12,25 +12,28 @@ async function getAccessToken(req, res) {
     const { refresh_token } = req.body;
     if (!refresh_token) {
       return res.status(400).json({
-        "message": "refresh-token-required",
+        message: "refresh-token-required",
       });
     }
     const decoded = jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET);
 
     if (!decoded.id) {
       return res.status(401).json({
-       "message": "invalid-token",
+        message: "invalid-token",
       });
     }
-
+    console.log("TOKEN FROM CLIENT:", refresh_token);
+    console.log("DECODED ID:", decoded.id);
     const [rows] = await pool.execute(
-      "SELECT id,email,user_role FROM users WHERE id=? AND refresh_token = ?",
+      "SELECT id,email,user_role, refresh_token FROM users WHERE id=? AND refresh_token = ?",
       [decoded.id, refresh_token],
     );
+    console.log("QUERY DONE, rows:", rows);
 
+    console.log("TOKEN IN DB:", rows[0]?.refresh_token);
     if (rows.length === 0) {
       return res.status(401).json({
-       "message": "invalid-session",
+        message: "invalid-session",
       });
     }
     const user = rows[0];
@@ -62,20 +65,20 @@ async function getAccessToken(req, res) {
       user.id,
     ]);
     return res.status(200).json({
-      "access_token": newAccessToken,
-      "refresh_token": newRefreshToken,
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken,
     });
   } catch (e) {
     if (e.name === "TokenExpiredError") {
       return res.status(401).json({
-        "message": "refresh-token-expired",
+        message: "refresh-token-expired",
       });
     }
 
     return res.status(401).json({
-      "message": "refresh-token-invalid",
+      message: "refresh-token-invalid",
     });
   }
 }
 
-module.exports = {getAccessToken};
+module.exports = { getAccessToken };

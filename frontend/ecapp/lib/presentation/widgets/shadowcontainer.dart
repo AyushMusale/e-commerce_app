@@ -14,16 +14,16 @@ class ShadowContainer extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: color ??  Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        //border: Border.all(color: Colors.grey, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-           blurRadius:2 ,
-            offset: Offset(0, 0),
-          ),
-        ],
+        color: color ?? Color.fromARGB(255, 245, 245, 245),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.black, width: 1.5)
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withValues(alpha: 0.4),
+        //     blurRadius:2 ,
+        //     offset: Offset(0, 0),
+        //   ),
+        //],
       ),
 
       child: child,
