@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ecapp/data/models/product.dart';
+import 'package:ecapp/data/models/newproduct.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
 import 'package:ecapp/presentation/bloc/events/imagepickerevent.dart';
@@ -293,13 +293,36 @@ class _ProductformpageState extends State<Productformpage> {
                             separatorBuilder:
                                 (_, __) => const SizedBox(width: 10),
                             itemBuilder: (context, index) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.file(
-                                  images[index],
-                                  width: 100,
-                                  fit: BoxFit.cover,
+                              return Stack(
+                                children: [ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.file(
+                                    images[index],
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
+                                Positioned(
+                                  top: 4,
+                                  right: 4,
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      setState(() {
+                                        if(state is ImagestateSuccess){
+                                          state.Images.removeAt(index);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration:  BoxDecoration(
+                                        color: Colors.black,
+                                        shape: BoxShape.circle
+                                      ),
+                                      padding: EdgeInsets.all(4),
+                                      child: Icon(Icons.close, color: Colors.white, size: 14,),
+                                    ),
+                                  ))
+                                ]
                               );
                             },
                           ),
@@ -324,7 +347,7 @@ class _ProductformpageState extends State<Productformpage> {
 
                           if (imageState is ImagestateSuccess) {
                             imagesList = imageState.Images;
-                            final Product product = Product(
+                            final NewProduct product = NewProduct(
                               name: nameController.text.trim().toLowerCase(),
                               price: priceController.text.trim(),
                               category: category,

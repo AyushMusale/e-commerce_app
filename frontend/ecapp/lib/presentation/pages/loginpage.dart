@@ -1,5 +1,7 @@
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/customerhomebloc.dart';
 import 'package:ecapp/presentation/bloc/events/authevent.dart';
+import 'package:ecapp/presentation/bloc/events/customerhomeevent.dart';
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -44,6 +46,7 @@ class _LoginpageState extends State<Loginpage> {
           context.pushReplacementNamed("sellernavigationpage");
           }
           else{
+            context.read<Customerhomebloc>().add(getCustomerDataEvent());
             context.pushReplacementNamed('customernavigationpage');
           }
         }

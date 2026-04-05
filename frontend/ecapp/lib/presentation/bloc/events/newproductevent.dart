@@ -1,9 +1,9 @@
 
-import 'package:ecapp/data/models/product.dart';
+import 'package:ecapp/data/models/newproduct.dart';
 
 class Newproductevent {}
 
 class Newproductaddrequest extends Newproductevent {
-  final Product product;
+  final NewProduct product;
   Newproductaddrequest(this.product);
 }

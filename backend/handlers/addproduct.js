@@ -5,7 +5,6 @@ const product = require("../models/product");
 
 async function addProduct(req, res) {
   try {
-    console.log('I a hit');
     const { name, price, category, instock} = req.body;
     const sellerId = req.user.id;
 

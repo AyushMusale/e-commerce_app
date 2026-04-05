@@ -8,6 +8,37 @@ class AuthClient {
   final AuthService authService;
   AuthClient(this.authService);
 
+  Future<http.Response> get(Uri url,{ Map<String, String>? headers})async{
+    try{
+      if (authService.accessToken == null) {
+        throw UnauthenticatedException();
+      }
+      final newHeaders = {...?headers};
+      newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+      newHeaders['Content-Type'] = 'application/json';
+
+      var res = await http.get(url, headers: headers);
+      if(res.statusCode == 401){
+        final jsonRes = jsonDecode(res.body);
+        if (jsonRes['message'] == "access-token-expired") {
+          bool refreshed = await authService.refreshTokenRequest();
+          if (refreshed) {
+            newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+            return await http.get(url, headers: newHeaders);
+          } else {
+            throw UnauthenticatedException();
+          }
+        }
+        if (jsonRes['message'] == "access-token-invalid") {
+          throw UnauthenticatedException();
+        }
+      } 
+      return  res; 
+    }catch(e){
+      rethrow;
+    }
+  }
+
   Future<http.Response> post(
     Uri url, {
     Map<String, String>? headers,

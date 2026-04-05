@@ -1,20 +1,29 @@
-import 'dart:io';
 
-class Product{
+class Product {
+  String id;
   String name;
-  String price;
-  List<String> category;
-  bool inStock;
-  List<File> images;
-  Product({required this.name, required this.price, required this.category, required this.inStock, required this.images});
+  List<String> images;
+  double price;
+  bool? instock;
+  List<String>? category;
 
-  String getName(){
-    return name;
-  }
-  String getPrice(){
-    return price;
-  }
-  List<String> getCateogory(){
-    return category;
+  Product({
+    required this.id,
+    required this.name,
+    required this.images,
+    required this.price,
+    required this.instock,
+    required this.category,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['_id'],
+      name: json['name'],
+      images: List<String>.from(json['images']),
+      price: (json['price'] as num).toDouble(),
+      instock: json['instock']?? true,
+      category: json['category']?? 'lifestyle',
+    );
   }
 }

@@ -51,7 +51,6 @@ class SellerProfileRepo {
 
       return 'network error';
     } catch (e) {
-      print(e);
       return 'error';
     }
     //}

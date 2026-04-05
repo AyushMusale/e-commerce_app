@@ -1,6 +1,6 @@
 
 
-import 'package:ecapp/data/models/product.dart';
+import 'package:ecapp/data/models/newproduct.dart';
 import 'package:ecapp/data/repositires/newproductrepo.dart';
 
 class Newproductusecase {
@@ -8,7 +8,7 @@ class Newproductusecase {
 
   Newproductusecase(this.newproductrepo);
 
-  Future<bool> execute(Product product){
+  Future<bool> execute(NewProduct product){
     return newproductrepo.execute(product);
   }
 

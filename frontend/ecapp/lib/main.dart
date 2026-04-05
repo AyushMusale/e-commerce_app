@@ -4,15 +4,18 @@ import 'package:ecapp/data/local_data/sellerprofiledb.dart';
 import 'package:ecapp/data/network/authclient.dart';
 import 'package:ecapp/data/network/authservice.dart';
 import 'package:ecapp/data/repositires/authrepo.dart';
+import 'package:ecapp/data/repositires/customerhomepagereppo.dart';
 import 'package:ecapp/data/repositires/newproductrepo.dart';
 import 'package:ecapp/data/repositires/registerrepo.dart';
 import 'package:ecapp/data/repositires/sellerprofilerepo.dart';
 import 'package:ecapp/data/router/router.dart';
 import 'package:ecapp/domain/usecases/authusecase.dart';
+import 'package:ecapp/domain/usecases/customerhomepageusecase.dart';
 import 'package:ecapp/domain/usecases/newproductusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
 import 'package:ecapp/domain/usecases/sellerprofileusecase.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/customerhomebloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
@@ -43,26 +46,43 @@ void main() async {
   final authrepo = Authrepo(authDB);
   final registerrepo = Registerrepo();
   final newProductrepo = Newproductrepo(authDB: authDB, authClient: authClient);
-  final sellerProfilerepo = SellerProfileRepo(client: authClient, sellerProfileDB: sellerProfileDB);
+  final sellerProfilerepo = SellerProfileRepo(
+    client: authClient,
+    sellerProfileDB: sellerProfileDB,
+  );
+  final getCustomerHomepageDataRepo = GetCustomerHomepageDataRepo(
+    client: authClient,
+  );
 
   //usecase
   final authusecase = Authusecase(authrepo);
   final registerusecase = Registerusecase(registerrepo);
   final newProductuseccase = Newproductusecase(newProductrepo);
-  final sellerProfileusecase = SellerProfileUsecase(sellerProfileRepo:  sellerProfilerepo);
+  final sellerProfileusecase = SellerProfileUsecase(
+    sellerProfileRepo: sellerProfilerepo,
+  );
+  final getcustomerHomeDatausecase = GetCustomerHomepageDataUsecase(
+    getCustomerHomepageDataRepo: getCustomerHomepageDataRepo,
+  );
 
   //bloc
-  final sellerProfileBloc = SellerPRofileBloc(sellerProfileDB: sellerProfileDB, sellerProfileUsecase: sellerProfileusecase);
+  final sellerProfileBloc = SellerPRofileBloc(
+    sellerProfileDB: sellerProfileDB,
+    sellerProfileUsecase: sellerProfileusecase,
+  );
   final authbloc = Authbloc(authusecase, authDB)..add(AuthChecksession());
   final router = createRouter(authbloc);
 
-  runApp(MainApp(
-    authbloc: authbloc,
-    router: router,
-    registerusecase: registerusecase,
-    newproductusecase: newProductuseccase,
-    sellerPRofileBloc: sellerProfileBloc,
-  ));
+  runApp(
+    MainApp(
+      authbloc: authbloc,
+      router: router,
+      registerusecase: registerusecase,
+      newproductusecase: newProductuseccase,
+      sellerPRofileBloc: sellerProfileBloc,
+      getCustomerHomepageDataUsecase: getcustomerHomeDatausecase ,
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -71,6 +91,7 @@ class MainApp extends StatelessWidget {
   final GoRouter router;
   final Registerusecase registerusecase;
   final Newproductusecase newproductusecase;
+  final GetCustomerHomepageDataUsecase getCustomerHomepageDataUsecase;
 
   const MainApp({
     super.key,
@@ -79,6 +100,7 @@ class MainApp extends StatelessWidget {
     required this.registerusecase,
     required this.newproductusecase,
     required this.sellerPRofileBloc,
+    required this.getCustomerHomepageDataUsecase,
   });
 
   @override
@@ -90,12 +112,10 @@ class MainApp extends StatelessWidget {
 
         BlocProvider(create: (_) => Registerbloc(registerusecase)),
         BlocProvider(create: (_) => Imagepickerbloc()),
-        BlocProvider(create: (_)=> Newproductbloc(newproductusecase)),
-        
+        BlocProvider(create: (_) => Newproductbloc(newproductusecase)),
+        BlocProvider(create: (_) => Customerhomebloc(getCustomerHomepageDataUsecase: getCustomerHomepageDataUsecase)),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
-      ),
+      child: MaterialApp.router(routerConfig: router),
     );
   }
 }

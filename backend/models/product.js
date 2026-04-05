@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { boolean } = require('zod');
 
 const productSchema = new mongoose.Schema({
     name:{
@@ -24,8 +25,8 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     inStock: {
-        type: Boolean,
-        default: true
+        type: boolean,
+        default: false
     },
     soldCount:{
         type: Number,
@@ -33,6 +34,7 @@ const productSchema = new mongoose.Schema({
     }
 })
 
-const product = mongoose.model('Product', productSchema);
 
-module.exports = product;
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;

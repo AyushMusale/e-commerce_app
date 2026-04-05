@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const pool = require("../DBconnection");
+const {pool} = require("../DBconnection");
 
 async function registerUser(req, res) {
   try {

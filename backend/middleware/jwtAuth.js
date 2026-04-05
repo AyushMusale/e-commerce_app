@@ -20,7 +20,6 @@ function jwtAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('middlware', process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (e) {
@@ -29,7 +28,6 @@ function jwtAuth(req, res, next) {
         message: "access-token-expired",
       });
 
-      console.log(err);
     return res.status(401).json({
       status: 401,
       message: "access-token-invalid",

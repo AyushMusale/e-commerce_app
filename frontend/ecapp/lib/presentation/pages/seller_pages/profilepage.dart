@@ -1,5 +1,4 @@
 
-import 'package:ecapp/data/local_data/sellerprofiledb.dart';
 import 'package:ecapp/data/models/sellerprofile.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/sellerprofile.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:ecapp/data/exceptions/authexception.dart';
 import 'package:ecapp/data/local_data/local_data.dart';
-import 'package:ecapp/data/models/product.dart';
+import 'package:ecapp/data/models/newproduct.dart';
 import 'package:ecapp/data/network/authclient.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +9,7 @@ class Newproductrepo {
   AuthClient authClient;
   AuthDB authDB;
   Newproductrepo({required this.authDB, required this.authClient});
-  Future<bool> execute(Product product) async {
+  Future<bool> execute(NewProduct product) async {
     final url = Uri.parse("http://10.0.2.2:5000/api/ECAPP/seller/addproduct");
     final accessToken = authDB.getAccessToken();
     final refreshToken = authDB.getRefreshToken();

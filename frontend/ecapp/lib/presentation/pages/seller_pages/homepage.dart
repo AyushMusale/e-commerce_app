@@ -1,6 +1,6 @@
-import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
+
 import 'package:ecapp/presentation/bloc/bloc/sellerprofile.dart';
-import 'package:ecapp/presentation/bloc/events/authevent.dart';
+
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
 import 'package:ecapp/presentation/bloc/state/profilestate.dart';
 import 'package:flutter/material.dart';
