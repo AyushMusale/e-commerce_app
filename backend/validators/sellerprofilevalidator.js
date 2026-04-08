@@ -15,12 +15,9 @@ const sellerSchema = z.object({
 })
 
 function validateReq(req,res,next){
-    console.log('validating..')
     const result = sellerSchema.safeParse(req.body)
-   // console.log(result)
    if(!result.success){
        const error = result.error.issues[0].message
-       console.log(error)
         return res.status(400).json({
             message:error,
         })

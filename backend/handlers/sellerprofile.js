@@ -1,7 +1,6 @@
-const pool = require("../DBconnection");
+const {pool} = require("../DBconnection");
 
 async function sellerprofille(req, res) {
-  console.log("main handler hit")
   const data = req.validatedData;
   const id = req.user.id;
   try {
@@ -29,6 +28,7 @@ async function sellerprofille(req, res) {
     })
 
   } catch (e) {
+    console.log(e)
     return res.status(500).json({
         message: 'server-error',
     })
