@@ -8,7 +8,7 @@ class Customerhomebloc extends Bloc<Customerhomeevent, Customerhomestate> {
   final GetCustomerHomepageDataUsecase getCustomerHomepageDataUsecase;
   Customerhomebloc({required this.getCustomerHomepageDataUsecase})
     : super(CustomerhomeInitialstate()) {
-    on<getCustomerDataEvent>((event, emit) async {
+    on<GetCustomerDataEvent>((event, emit) async {
       emit(CustomerhomePendingstate());
       try{
         Homedata homedata = await getCustomerHomepageDataUsecase.execute();

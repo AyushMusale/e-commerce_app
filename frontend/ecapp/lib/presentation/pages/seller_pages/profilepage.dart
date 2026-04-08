@@ -88,6 +88,13 @@ class _SellerProfilepageState extends State<SellerProfilepage> {
                 child: Column(
                   children: [
                     SizedBox(height: 30),
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Row(
+                        
+                      ),
+                    ),
+                    SizedBox(height: 30),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

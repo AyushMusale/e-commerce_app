@@ -46,7 +46,7 @@ class _LoginpageState extends State<Loginpage> {
           context.pushReplacementNamed("sellernavigationpage");
           }
           else{
-            context.read<Customerhomebloc>().add(getCustomerDataEvent());
+            context.read<Customerhomebloc>().add(GetCustomerDataEvent());
             context.pushReplacementNamed('customernavigationpage');
           }
         }

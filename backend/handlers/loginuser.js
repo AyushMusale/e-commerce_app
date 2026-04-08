@@ -82,7 +82,6 @@ async function loginUser(req, res) {
       },
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       status: 500,
       message: "login-failed",

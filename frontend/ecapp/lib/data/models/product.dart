@@ -23,7 +23,7 @@ class Product {
       images: List<String>.from(json['images']),
       price: (json['price'] as num).toDouble(),
       instock: json['instock']?? true,
-      category: json['category']?? 'lifestyle',
+      category: json['category'] != null ? List<String>.from(json['category']) : ['lifestyle'],
     );
   }
 }

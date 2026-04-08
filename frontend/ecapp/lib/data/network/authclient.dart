@@ -8,17 +8,16 @@ class AuthClient {
   final AuthService authService;
   AuthClient(this.authService);
 
-  Future<http.Response> get(Uri url,{ Map<String, String>? headers})async{
-    try{
+  Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
+    try {
       if (authService.accessToken == null) {
         throw UnauthenticatedException();
       }
       final newHeaders = {...?headers};
       newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
-      newHeaders['Content-Type'] = 'application/json';
 
-      var res = await http.get(url, headers: headers);
-      if(res.statusCode == 401){
+      var res = await http.get(url, headers: newHeaders);
+      if (res.statusCode == 401) {
         final jsonRes = jsonDecode(res.body);
         if (jsonRes['message'] == "access-token-expired") {
           bool refreshed = await authService.refreshTokenRequest();
@@ -32,9 +31,49 @@ class AuthClient {
         if (jsonRes['message'] == "access-token-invalid") {
           throw UnauthenticatedException();
         }
-      } 
-      return  res; 
-    }catch(e){
+      }
+      if (res.statusCode >= 400) {
+        throw Exception('Request failed: ${res.statusCode}');
+      }
+      return res;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> delete(Uri url, {Map<String, String>? headers}) async {
+    try {
+      if (authService.accessToken == null) {
+        throw UnauthenticatedException();
+      }
+      final newHeaders = {...?headers};
+      newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+
+      var res = await http
+          .delete(url, headers: newHeaders)
+          .timeout(const Duration(seconds: 10));
+      if (res.statusCode == 401) {
+        final jsonRes = jsonDecode(res.body);
+        if (jsonRes['message'] == "access-token-expired") {
+          bool refreshed = await authService.refreshTokenRequest();
+          if (refreshed) {
+            newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
+            return await http
+                .delete(url, headers: newHeaders)
+                .timeout(const Duration(seconds: 10));
+          } else {
+            throw UnauthenticatedException();
+          }
+        }
+        if (jsonRes['message'] == "access-token-invalid") {
+          throw UnauthenticatedException();
+        }
+      }
+      if (res.statusCode >= 400) {
+        throw Exception('Request failed: ${res.statusCode}');
+      }
+      return res;
+    } catch (e) {
       rethrow;
     }
   }
@@ -51,7 +90,6 @@ class AuthClient {
       final newHeaders = {...?headers};
       newHeaders['Authorization'] = 'Bearer ${authService.accessToken}';
       newHeaders['Content-Type'] = 'application/json';
-
 
       var res = await http.post(url, headers: newHeaders, body: body);
 
@@ -72,7 +110,6 @@ class AuthClient {
       }
       return res;
     } catch (e) {
-
       rethrow;
     }
   }

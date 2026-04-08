@@ -18,7 +18,7 @@ class CustomerHomepage extends StatefulWidget {
 class _CustomerHomepageState extends State<CustomerHomepage> {
   @override
   void initState() {
-    context.read<Customerhomebloc>().add(getCustomerDataEvent());
+    context.read<Customerhomebloc>().add(GetCustomerDataEvent());
     super.initState();
   }
 
@@ -50,63 +50,74 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
                     state is CustomerhomeInitialstate) {
                   return Center(child: CircularProgressIndicator());
                 }
-                final List<Product> electronics =
-                    (state as CustomerhomeSuccessstate).homedata.electronics;
-                final List<Product> fashion = state.homedata.fashion;
-                return Column(
-                  children: [
-                    Container(
-                      height: dh * 0.05,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black, width: 1.5),
-                        borderRadius: BorderRadius.circular(3),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.grey,
-                        //     spreadRadius: 2,
-                        //     offset: Offset(2, 2)
-                        //   )
-                        // ]
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "Search",
-                                  style: TextStyle(color: Colors.black54),
+                if (state is CustomerhomeSuccessstate) {
+                  final List<Product> electronics = state.homedata.electronics;
+                  final List<Product> fashion = state.homedata.fashion;
+                  return Column(
+                    children: [
+                      Container(
+                        height: dh * 0.05,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black, width: 1.5),
+                          borderRadius: BorderRadius.circular(3),
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.grey,
+                          //     spreadRadius: 2,
+                          //     offset: Offset(2, 2)
+                          //   )
+                          // ]
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "Search",
+                                    style: TextStyle(color: Colors.black54),
+                                  ),
+                                  border: InputBorder.none,
                                 ),
-                                border: InputBorder.none,
                               ),
                             ),
-                          ),
-                          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                        ],
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.search),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      height: dh * 0.3,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 190, 59),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.orange,
-                            offset: Offset(6, 6),
-                            spreadRadius: 3,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(2),
+                      SizedBox(height: 20),
+                      Container(
+                        height: dh * 0.3,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 190, 59),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange,
+                              offset: Offset(6, 6),
+                              spreadRadius: 3,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 40),
-                    ProductHorizontalList(title: "Electronics", products: electronics),
-                    SizedBox(height: 40),
-                    ProductHorizontalList(title: "Fashion", products: fashion),
-                  ],
-                );
+                      SizedBox(height: 40),
+                      ProductHorizontalList(
+                        title: "Electronics",
+                        products: electronics,
+                      ),
+                      SizedBox(height: 40),
+                      ProductHorizontalList(
+                        title: "Fashion",
+                        products: fashion,
+                      ),
+                    ],
+                  );
+                }
+                return Center(child: CircularProgressIndicator(),);
               },
             ),
           ),

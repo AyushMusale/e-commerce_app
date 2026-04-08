@@ -89,8 +89,8 @@ class ProductHorizontalList extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     context.pushNamed(
-                      'customerproduct',
-                      pathParameters: {'id': products[index].id},
+                      'customerproductpage',
+                       pathParameters: {'id': products[index].id},
                     );
                   },
                   child: ProductCard(product: products[index]),

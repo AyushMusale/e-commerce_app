@@ -7,7 +7,6 @@ require("dotenv").config();
 //check refresh token for validity if valid send new access token
 //if the req[refeshtoken] is expired send logout res
 async function getAccessToken(req, res) {
-  console.log("hit");
   try {
     const { refresh_token } = req.body;
     if (!refresh_token) {
@@ -22,15 +21,12 @@ async function getAccessToken(req, res) {
         message: "invalid-token",
       });
     }
-    console.log("TOKEN FROM CLIENT:", refresh_token);
-    console.log("DECODED ID:", decoded.id);
+
     const [rows] = await pool.execute(
       "SELECT id,email,user_role, refresh_token FROM users WHERE id=? AND refresh_token = ?",
       [decoded.id, refresh_token],
     );
-    console.log("QUERY DONE, rows:", rows);
 
-    console.log("TOKEN IN DB:", rows[0]?.refresh_token);
     if (rows.length === 0) {
       return res.status(401).json({
         message: "invalid-session",

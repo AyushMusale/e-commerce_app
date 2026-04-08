@@ -1,3 +1,3 @@
 class Customerhomeevent {}
 
-class getCustomerDataEvent extends Customerhomeevent{}
+class GetCustomerDataEvent extends Customerhomeevent{}

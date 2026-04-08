@@ -1,5 +1,6 @@
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
+import 'package:ecapp/presentation/pages/customer_pages/cartpage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/homepage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/productpage.dart';
@@ -66,8 +67,14 @@ GoRouter createRouter(Authbloc authbloc) => GoRouter(
       path: '/customer/product/:id',
       name: 'customerproductpage',
       builder: (context, state) {
-        final  id = state.pathParameters['id']!;
-        return Productpage(id: id,);},
+        final id = state.pathParameters['id']!;
+        return Productpage(id: id);
+      },
+    ),
+    GoRoute(
+      path: '/customer/cart',
+      name: 'customercartpage',
+      builder: (context, state) => Cartpage(),
     ),
     GoRoute(
       path: '/seller/navigationpage',
