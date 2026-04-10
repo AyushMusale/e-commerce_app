@@ -5,6 +5,7 @@ import 'package:ecapp/presentation/pages/customer_pages/customerprofilepage.dart
 import 'package:ecapp/presentation/pages/customer_pages/homepage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/productpage.dart';
+import 'package:ecapp/presentation/pages/customer_pages/searchresultpage.dart';
 import 'package:ecapp/presentation/pages/loginpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/bankdetails.dart';
 import 'package:ecapp/presentation/pages/seller_pages/navigationpage.dart';
@@ -108,6 +109,13 @@ GoRouter createRouter(Authbloc authbloc) => GoRouter(
       path: '/customer/profile',
       name: 'CustomerProfilePage',
       builder: (context, state) => const Customerprofilepage(),
+    ),
+    GoRoute(
+      path: '/customer/search/:keyword',
+      name: 'searchresultpage',
+      builder: (context, state) { 
+      final keyword = state.pathParameters['keyword']!;
+      return Searchresultpage(keyword: keyword);},
     ),
   ],
 );

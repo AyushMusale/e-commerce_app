@@ -10,6 +10,7 @@ const {
 const {
   validateCustomerDetails,
 } = require("../validators/customerprofilevalidator");
+const { searchHandler } = require("../handlers/searchhandlers");
 const {
   StoreCustomerProfileHandler,
   getCustomerProfile,
@@ -29,5 +30,6 @@ router.post(
   StoreCustomerProfileHandler,
 );
 router.get("/profile", jwtAuth, getCustomerProfile);
+router.get("/search/:keyword", searchHandler);
 
 module.exports = router;

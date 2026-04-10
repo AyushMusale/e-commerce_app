@@ -10,6 +10,7 @@ import 'package:ecapp/data/repositires/customerprofilerepo.dart';
 import 'package:ecapp/data/repositires/fetchproductrepo.dart';
 import 'package:ecapp/data/repositires/newproductrepo.dart';
 import 'package:ecapp/data/repositires/registerrepo.dart';
+import 'package:ecapp/data/repositires/searchrepo.dart';
 import 'package:ecapp/data/repositires/sellerbankdetailsrepo.dart';
 import 'package:ecapp/data/repositires/sellerprofilerepo.dart';
 import 'package:ecapp/data/router/router.dart';
@@ -21,6 +22,7 @@ import 'package:ecapp/domain/usecases/customerprofileusecase.dart';
 import 'package:ecapp/domain/usecases/fetchproductusecase.dart';
 import 'package:ecapp/domain/usecases/newproductusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
+import 'package:ecapp/domain/usecases/searchusecase.dart';
 import 'package:ecapp/domain/usecases/sellerprofileusecase.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/bankdetails.dart';
@@ -31,6 +33,7 @@ import 'package:ecapp/presentation/bloc/bloc/fetchproductbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/searchbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/sellerprofile.dart';
 import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +72,7 @@ void main() async {
   final cartRepo = CartRepo(clinet: authClient);
   final bankDetailsRepo = Sellerbankdetailsrepo(client: authClient);
   final custoemrProfileRepo = CustomerProfileRepo(client: authClient);
+  final searchRepo = SearchRepo(client: authClient);
   
     //usecase
   final authusecase = Authusecase(authrepo);
@@ -84,6 +88,7 @@ void main() async {
   final cartUsecase = CartUsecase(cartRepo: cartRepo);
   final bankdetailsusecase = SellerBankdetailsusecase(sellerbankdetailsrepo: bankDetailsRepo);
   final customerProfileUsecase = CustomerProfileUsecase(customerProfileRepo:  custoemrProfileRepo);
+  final searchUsecase = SearchUsecase(searchRepo: searchRepo);
 
   //bloc
   final sellerProfileBloc = SellerPRofileBloc(
@@ -105,6 +110,7 @@ void main() async {
       cartUsecase: cartUsecase,
       sellerBankdetailsusecase: bankdetailsusecase,
       customerProfileUsecase: customerProfileUsecase,
+      searchUsecase: searchUsecase,
     ),
   );
 }
@@ -120,6 +126,7 @@ class MainApp extends StatelessWidget {
   final CartUsecase cartUsecase;
   final SellerBankdetailsusecase sellerBankdetailsusecase;
   final CustomerProfileUsecase customerProfileUsecase;
+  final SearchUsecase searchUsecase;
 
   const MainApp({
     super.key,
@@ -133,6 +140,7 @@ class MainApp extends StatelessWidget {
     required this.cartUsecase,
     required this.sellerBankdetailsusecase,
     required this.customerProfileUsecase,
+    required this.searchUsecase,
   });
 
   @override
@@ -150,6 +158,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (_)=>Cartbloc(cartUsecase: cartUsecase)),
         BlocProvider(create: (_)=>Bankdetailsbloc(sellerBankdetailsusecase: sellerBankdetailsusecase)),
         BlocProvider(create: (_)=>CustomerProfileBLoc(customerProfileUsecase:  customerProfileUsecase)),
+        BlocProvider(create: (_)=>Searchbloc(searchUsecase: searchUsecase)),
       ],
       child: MaterialApp.router(routerConfig: router),
     );

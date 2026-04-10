@@ -21,6 +21,7 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
     super.initState();
   }
 
+  final searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final dh = MediaQuery.of(context).size.height;
@@ -72,6 +73,7 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
                           children: [
                             Expanded(
                               child: TextField(
+                                controller: searchController,
                                 decoration: InputDecoration(
                                   label: Text(
                                     "Search",
@@ -82,7 +84,9 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context.push('/customer/search/${searchController.text.trim()}');
+                              },
                               icon: Icon(Icons.search),
                             ),
                           ],
