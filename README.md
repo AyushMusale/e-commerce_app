@@ -129,21 +129,20 @@ npm start
 
 # Frontend Setup
 
-- cd frontend
-- flutter pub get
-- flutter run
+cd frontend
+flutter pub get
+flutter run
 
-- frontend/
-- ├── presentation/
-- ├── domain/
-- ├── data/
+frontend/
+├── presentation/
+├── domain/
+├── data/
+backend/
+├── routes/   
+├── controllers/
+├── models/
 
-- backend/
-- ├── routes/   
-- ├── controllers/
-- ├── models/
-
-- 📫 Contact
+📫 Contact
 1. GitHub: https://github.com/your-username
 2. LinkedIn: https://www.linkedin.com/in/ayush-musale-107655327/
 
