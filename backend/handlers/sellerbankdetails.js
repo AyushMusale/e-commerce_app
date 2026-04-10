@@ -24,7 +24,6 @@ async function sellerBankdetailsHandler(req, res) {
 }
 
 async function getSellerBankDetails(req, res) {
-    console.log('hit')
   try {
     const { id } = req.user;
     const [rows] = await pool.execute(

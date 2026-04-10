@@ -4,7 +4,6 @@ async function StoreCustomerProfileHandler(req, res) {
   try {
     const { id } = req.user;
     const data = req.validatedCustomerDetails;
-    console.log(data,id)
     await pool.execute(
       "Insert Into customer(customer_id,email,last_name,first_name,phone_no,address,city,pincode) values(?,?,?,?,?,?,?,?)",
       [
@@ -22,7 +21,6 @@ async function StoreCustomerProfileHandler(req, res) {
       message: "success",
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       message: "server-error",
     });
@@ -48,7 +46,6 @@ async function getCustomerProfile(req, res) {
     message:'success',
     profile: user
   })}catch(e){
-    console.log(e)
     return res.status(500).json({
         message: 'server-error'
     })

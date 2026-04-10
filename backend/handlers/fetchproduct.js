@@ -29,7 +29,6 @@ async function fetchproduct(req, res) {
       product: formatProduct,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       message: "server-error",
     });

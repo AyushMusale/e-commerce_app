@@ -80,7 +80,6 @@ async function getCart(req, res) {
       cart_items: formatCart,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       message: "server error",
     });

@@ -41,7 +41,6 @@ async function registerUser(req, res) {
       message: 'success'
     });
   } catch (e) {
-    console.log("Register error", e)
     if (e.code === "ER_DUP_ENTRY") {
       return res.status(409).json({
         status: 409,

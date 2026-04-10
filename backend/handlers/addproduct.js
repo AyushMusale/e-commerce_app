@@ -17,7 +17,6 @@ async function addProduct(req, res) {
       !category ||
       instock === undefined
     ) {
-      console.log("fields missing")
       return res.status(400).json({
         status: 400,
         message: "fields-required",
@@ -39,7 +38,6 @@ async function addProduct(req, res) {
       productId: newProduct._id,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       status: 500,
       message: "error",

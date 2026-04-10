@@ -1,7 +1,6 @@
 const Product = require("../models/product");
 
 async function searchHandler(req, res) {
-    console.log("searchHandler");
   try {
     const { keyword } = req.params;
     if (!keyword) {
