@@ -112,35 +112,6 @@ This ensures:
 - Admin dashboard analytics
 - Performance optimizations
 
-# Backend Setup
-
-cd backend
-npm install
-
-## Create a .env file:
-
-- PORT=5000
-- MONGO_URI=your_mongodb_connection_string
-- JWT_SECRET=your_secret_key
-- RAZORPAY_KEY=your_key
-- RAZORPAY_SECRET=your_secret
-
-npm start
-
-# Frontend Setup
-
-cd frontend
-flutter pub get
-flutter run
-
-frontend/
-├── presentation/
-├── domain/
-├── data/
-backend/
-├── routes/   
-├── controllers/
-├── models/
 
 📫 Contact
 1. GitHub: https://github.com/your-username
