@@ -1,13 +1,16 @@
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/state/authstate.dart';
 import 'package:ecapp/presentation/pages/customer_pages/cartpage.dart';
+import 'package:ecapp/presentation/pages/customer_pages/customerprofilepage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/homepage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/customer_pages/productpage.dart';
 import 'package:ecapp/presentation/pages/loginpage.dart';
+import 'package:ecapp/presentation/pages/seller_pages/bankdetails.dart';
 import 'package:ecapp/presentation/pages/seller_pages/navigationpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/productformpage.dart';
 import 'package:ecapp/presentation/pages/seller_pages/profilepage.dart';
+import 'package:ecapp/presentation/pages/seller_pages/profilepagenavigator.dart';
 import 'package:ecapp/presentation/pages/signuppage.dart';
 import 'package:ecapp/utils/gorouterstreamnotifier.dart';
 import 'package:flutter/widgets.dart';
@@ -87,9 +90,24 @@ GoRouter createRouter(Authbloc authbloc) => GoRouter(
       builder: (context, state) => const Productformpage(),
     ),
     GoRoute(
-      path: '/seller/profile',
+      path: '/seller/profile/personal',
       name: "sellerprofilepage",
       builder: (context, state) => const SellerProfilepage(),
+    ),
+    GoRoute(
+      path: '/seller/profile/bank',
+      name: 'sellerbankdetailspage',
+      builder: (context, state) => const SellerBankDetailsPage(),
+    ),
+    GoRoute(
+      path: '/seller/profile',
+      name: 'sellerprofilenavigatorpage',
+      builder: (context, state) => const SellerProfilepagenavigator(),
+    ),
+    GoRoute(
+      path: '/customer/profile',
+      name: 'CustomerProfilePage',
+      builder: (context, state) => const Customerprofilepage(),
     ),
   ],
 );

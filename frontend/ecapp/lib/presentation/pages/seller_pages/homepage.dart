@@ -27,7 +27,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  context.pushReplacementNamed("sellerprofilepage");
+                  context.pushNamed("sellerprofilenavigatorpage");
                 },
                 child: Text("Profile"),
               ),

@@ -1,12 +1,11 @@
 import 'package:ecapp/data/models/product.dart';
-import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/customerhomebloc.dart';
-import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:ecapp/presentation/bloc/events/customerhomeevent.dart';
 import 'package:ecapp/presentation/bloc/state/customerhomestate.dart';
 import 'package:ecapp/presentation/widgets/productlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomerHomepage extends StatefulWidget {
   const CustomerHomepage({super.key});
@@ -30,9 +29,9 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
         actions: [
           IconButton(
             onPressed: () {
-              context.read<Authbloc>().add(LogoutEvent());
+              context.pushNamed('CustomerProfilePage');
             },
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.person),
           ),
         ],
       ),
@@ -117,7 +116,7 @@ class _CustomerHomepageState extends State<CustomerHomepage> {
                     ],
                   );
                 }
-                return Center(child: CircularProgressIndicator(),);
+                return Center(child: CircularProgressIndicator());
               },
             ),
           ),

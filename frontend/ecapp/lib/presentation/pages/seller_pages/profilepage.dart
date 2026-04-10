@@ -1,8 +1,5 @@
-
 import 'package:ecapp/data/models/sellerprofile.dart';
-import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/sellerprofile.dart';
-import 'package:ecapp/presentation/bloc/events/authevent.dart';
 import 'package:ecapp/presentation/bloc/events/sellerprofileevent.dart';
 import 'package:ecapp/presentation/bloc/state/profilestate.dart';
 import 'package:ecapp/presentation/widgets/shadowcontainer.dart';
@@ -34,7 +31,6 @@ class _SellerProfilepageState extends State<SellerProfilepage> {
 
   @override
   Widget build(BuildContext context) {
-    final dh = MediaQuery.of(context).size.height;
     return BlocConsumer<SellerPRofileBloc, SellerProfilestate>(
       listener: (context, state) {
         if (state is SellerProfileLoadedState) {
@@ -64,258 +60,227 @@ class _SellerProfilepageState extends State<SellerProfilepage> {
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Profile Page",
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            
-            ),
-            actions: [
-              IconButton(onPressed: (){
-                context.read<Authbloc>().add(LogoutEvent());
-              }, icon: Icon(Icons.logout))
-            ],
-          ),
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 30),
-                    Container(
-                      decoration: BoxDecoration(),
-                      child: Row(
-                        
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Basiic Details:",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
                       ),
                     ),
-                    SizedBox(height: 30),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Basiic Details:",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.8,
+                  ),
+                  ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+                      child: TextField(
+                        controller: shopNameController,
+                        decoration: InputDecoration(
+                          labelText: "Shop Name",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
-                    ShadowContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                        child: TextField(
-                          controller: shopNameController,
-                          decoration: InputDecoration(
-                            labelText: "Shop Name",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              //fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(height: 10),
+                  ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+                      child: TextField(
+                        controller: ownerNameController,
+                        decoration: InputDecoration(
+                          labelText: "Owner's Name",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Contact Details:",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+                      child: TextField(
+                        keyboardType: TextInputType.numberWithOptions(
+                          signed: false,
+                          decimal: false,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        controller: phoneNoController,
+                        decoration: InputDecoration(
+                          labelText: "Phone no.",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Location:",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
+                      child: TextField(
+                        controller: addressController,
+                        decoration: InputDecoration(
+                          labelText: "Shop Address",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ShadowContainer(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              5.0,
+                              2.0,
+                              5.0,
+                              2.0,
                             ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ShadowContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                        child: TextField(
-                          controller: ownerNameController,
-                          decoration: InputDecoration(
-                            labelText: "Owner's Name",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              //fontWeight: FontWeight.bold,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Contact Details:",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
-                    ),
-                    ShadowContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                        child: TextField(
-                          keyboardType: TextInputType.numberWithOptions(
-                            signed: false,
-                            decimal: false,
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          controller: phoneNoController,
-                          decoration: InputDecoration(
-                            labelText: "Phone no.",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ShadowContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                        child: TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              //fontWeight: FontWeight.bold,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Location:",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
-                    ),
-                    ShadowContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                        child: TextField(
-                          controller: addressController,
-                          decoration: InputDecoration(
-                            labelText: "Shop Address",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              //fontWeight: FontWeight.bold,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ShadowContainer(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                5.0,
-                                2.0,
-                                5.0,
-                                2.0,
-                              ),
-                              child: TextField(
-                                controller: cityController,
-                                decoration: InputDecoration(
-                                  labelText: "City",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black,
-                                    //fontWeight: FontWeight.bold,
-                                  ),
-                                  border: InputBorder.none,
+                            child: TextField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                labelText: "City",
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  //fontWeight: FontWeight.bold,
                                 ),
+                                border: InputBorder.none,
                               ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: ShadowContainer(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                5.0,
-                                2.0,
-                                5.0,
-                                2.0,
-                              ),
-                              child: TextField(
-                                keyboardType: TextInputType.numberWithOptions(
-                                  signed: false,
-                                  decimal: false,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                controller: pincodeController,
-                                decoration: InputDecoration(
-                                  labelText: "Pin Code",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black,
-                                    //fontWeight: FontWeight.bold,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    InkWell(
-                      onTap: () {
-                        SellerProfileModel sellerProfile = SellerProfileModel(
-                          shopName: shopNameController.text.trim(),
-                          ownerName: ownerNameController.text.trim(),
-                          phoneNo: phoneNoController.text.trim(),
-                          email: emailController.text.trim(),
-                          shopAddress: addressController.text.trim(),
-                          city: cityController.text.trim(),
-                          pincode: pincodeController.text.trim(),
-                        );
-
-                        context.read<SellerPRofileBloc>().add(SellerCreateProfileEvent(sellerProfile:  sellerProfile));
-                      },
-                      child: Container(
-                        height: dh * 0.05,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.black38, width: 1.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: 0.8,
                             ),
                           ),
                         ),
                       ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: ShadowContainer(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              5.0,
+                              2.0,
+                              5.0,
+                              2.0,
+                            ),
+                            child: TextField(
+                              keyboardType: TextInputType.numberWithOptions(
+                                signed: false,
+                                decimal: false,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              controller: pincodeController,
+                              decoration: InputDecoration(
+                                labelText: "Pin Code",
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  //fontWeight: FontWeight.bold,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          SellerProfileModel sellerProfile = SellerProfileModel(
+                            shopName: shopNameController.text.trim(),
+                            ownerName: ownerNameController.text.trim(),
+                            phoneNo: phoneNoController.text.trim(),
+                            email: emailController.text.trim(),
+                            shopAddress: addressController.text.trim(),
+                            city: cityController.text.trim(),
+                            pincode: pincodeController.text.trim(),
+                          );
+                      
+                          context.read<SellerPRofileBloc>().add(
+                            SellerCreateProfileEvent(
+                              sellerProfile: sellerProfile,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

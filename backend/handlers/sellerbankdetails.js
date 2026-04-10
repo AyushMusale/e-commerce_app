@@ -24,6 +24,7 @@ async function sellerBankdetailsHandler(req, res) {
 }
 
 async function getSellerBankDetails(req, res) {
+    console.log('hit')
   try {
     const { id } = req.user;
     const [rows] = await pool.execute(
@@ -32,7 +33,7 @@ async function getSellerBankDetails(req, res) {
     );
 
     if (rows.length === 0) {
-      return res.status(404).json({
+      return res.status(200).json({
         message: "no details found",
       });
     }

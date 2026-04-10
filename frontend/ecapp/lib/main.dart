@@ -6,21 +6,27 @@ import 'package:ecapp/data/network/authservice.dart';
 import 'package:ecapp/data/repositires/authrepo.dart';
 import 'package:ecapp/data/repositires/cartrepo.dart';
 import 'package:ecapp/data/repositires/customerhomepagereppo.dart';
+import 'package:ecapp/data/repositires/customerprofilerepo.dart';
 import 'package:ecapp/data/repositires/fetchproductrepo.dart';
 import 'package:ecapp/data/repositires/newproductrepo.dart';
 import 'package:ecapp/data/repositires/registerrepo.dart';
+import 'package:ecapp/data/repositires/sellerbankdetailsrepo.dart';
 import 'package:ecapp/data/repositires/sellerprofilerepo.dart';
 import 'package:ecapp/data/router/router.dart';
 import 'package:ecapp/domain/usecases/authusecase.dart';
+import 'package:ecapp/domain/usecases/bankdetailsusecase.dart';
 import 'package:ecapp/domain/usecases/cartusecase.dart';
 import 'package:ecapp/domain/usecases/customerhomepageusecase.dart';
+import 'package:ecapp/domain/usecases/customerprofileusecase.dart';
 import 'package:ecapp/domain/usecases/fetchproductusecase.dart';
 import 'package:ecapp/domain/usecases/newproductusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
 import 'package:ecapp/domain/usecases/sellerprofileusecase.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/bankdetails.dart';
 import 'package:ecapp/presentation/bloc/bloc/cartbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/customerhomebloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/customerprofilebloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/fetchproductbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
@@ -61,6 +67,8 @@ void main() async {
   );
   final fetchproductRepo = FetchproductRepo(client: authClient);
   final cartRepo = CartRepo(clinet: authClient);
+  final bankDetailsRepo = Sellerbankdetailsrepo(client: authClient);
+  final custoemrProfileRepo = CustomerProfileRepo(client: authClient);
   
     //usecase
   final authusecase = Authusecase(authrepo);
@@ -74,6 +82,8 @@ void main() async {
   );
   final fetchproductusecase = Fetchproductusecase(fetchproductRepo: fetchproductRepo);
   final cartUsecase = CartUsecase(cartRepo: cartRepo);
+  final bankdetailsusecase = SellerBankdetailsusecase(sellerbankdetailsrepo: bankDetailsRepo);
+  final customerProfileUsecase = CustomerProfileUsecase(customerProfileRepo:  custoemrProfileRepo);
 
   //bloc
   final sellerProfileBloc = SellerPRofileBloc(
@@ -93,6 +103,8 @@ void main() async {
       getCustomerHomepageDataUsecase: getcustomerHomeDatausecase ,
       fetchproductusecase: fetchproductusecase,
       cartUsecase: cartUsecase,
+      sellerBankdetailsusecase: bankdetailsusecase,
+      customerProfileUsecase: customerProfileUsecase,
     ),
   );
 }
@@ -106,6 +118,8 @@ class MainApp extends StatelessWidget {
   final GetCustomerHomepageDataUsecase getCustomerHomepageDataUsecase;
   final Fetchproductusecase fetchproductusecase;
   final CartUsecase cartUsecase;
+  final SellerBankdetailsusecase sellerBankdetailsusecase;
+  final CustomerProfileUsecase customerProfileUsecase;
 
   const MainApp({
     super.key,
@@ -116,7 +130,9 @@ class MainApp extends StatelessWidget {
     required this.sellerPRofileBloc,
     required this.getCustomerHomepageDataUsecase,
     required this.fetchproductusecase,
-    required this.cartUsecase
+    required this.cartUsecase,
+    required this.sellerBankdetailsusecase,
+    required this.customerProfileUsecase,
   });
 
   @override
@@ -131,7 +147,9 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (_) => Newproductbloc(newproductusecase)),
         BlocProvider(create: (_) => Customerhomebloc(getCustomerHomepageDataUsecase: getCustomerHomepageDataUsecase)),
         BlocProvider(create: (_)=>Fetchproductbloc(fetchproductusecase: fetchproductusecase)),
-        BlocProvider(create: (_)=>Cartbloc(cartUsecase: cartUsecase))
+        BlocProvider(create: (_)=>Cartbloc(cartUsecase: cartUsecase)),
+        BlocProvider(create: (_)=>Bankdetailsbloc(sellerBankdetailsusecase: sellerBankdetailsusecase)),
+        BlocProvider(create: (_)=>CustomerProfileBLoc(customerProfileUsecase:  customerProfileUsecase)),
       ],
       child: MaterialApp.router(routerConfig: router),
     );

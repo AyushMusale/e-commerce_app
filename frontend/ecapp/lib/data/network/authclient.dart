@@ -32,6 +32,9 @@ class AuthClient {
           throw UnauthenticatedException();
         }
       }
+      if(res.statusCode == 404){
+        return res;
+      }
       if (res.statusCode >= 400) {
         throw Exception('Request failed: ${res.statusCode}');
       }

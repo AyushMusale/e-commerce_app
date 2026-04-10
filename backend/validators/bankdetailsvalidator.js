@@ -6,7 +6,7 @@ const bankSchema  = z.object({
     account_number: z.string().min(1,'account number required')
 })
 
-function validatedBankdetails(req,res){
+function validatedBankdetails(req,res, next){
     const result = bankSchema.safeParse(req.body)
     if(!result.success){
         const error = result.error.issues[0].message
