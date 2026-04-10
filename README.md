@@ -11,11 +11,11 @@ Built with a focus on clean architecture, scalability, and real-world system des
 
 - JWT-based authentication
 - Secure login and signup
-- Role-based access control (Admin / Customer)
+- Role-based access control (Admin / Merchant / Customer)
 
 ### 🛍️ Product Management
 
-- Add, update, and delete products (Admin)
+- Add, update, and delete products (Merchant)
 - Structured product listings
 - Category-based organization
 
@@ -119,32 +119,32 @@ npm install
 
 ## Create a .env file:
 
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-RAZORPAY_KEY=your_key
-RAZORPAY_SECRET=your_secret
+- PORT=5000
+- MONGO_URI=your_mongodb_connection_string
+- JWT_SECRET=your_secret_key
+- RAZORPAY_KEY=your_key
+- RAZORPAY_SECRET=your_secret
 
 npm start
 
 # Frontend Setup
 
-cd frontend
-flutter pub get
-flutter run
+- cd frontend
+- flutter pub get
+- flutter run
 
-frontend/
-├── presentation/
-├── domain/
-├── data/
+- frontend/
+- ├── presentation/
+- ├── domain/
+- ├── data/
 
-backend/
-├── routes/
-├── controllers/
-├── models/
+- backend/
+- ├── routes/   
+- ├── controllers/
+- ├── models/
 
-📫 Contact
-GitHub: https://github.com/your-username
-LinkedIn: https://www.linkedin.com/in/ayush-musale-107655327/
+- 📫 Contact
+1. GitHub: https://github.com/your-username
+2. LinkedIn: https://www.linkedin.com/in/ayush-musale-107655327/
 
 > “Discipline over motivation. Systems over hacks.”
