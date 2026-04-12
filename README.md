@@ -114,7 +114,7 @@ This ensures:
 
 
 📫 Contact
-1. GitHub: https://github.com/your-username
-2. LinkedIn: https://www.linkedin.com/in/ayush-musale-107655327/
+1. GitHub: https://github.com/AyushMusale
+2. LinkedIn: https://www.linkedin.com/in/ayushmusale/
 
 > “Discipline over motivation. Systems over hacks.”

@@ -4,7 +4,7 @@ class NewProduct{
   String name;
   String price;
   List<String> category;
-  bool inStock;
+  int inStock;
   List<File> images;
   NewProduct({required this.name, required this.price, required this.category, required this.inStock, required this.images});
 

@@ -1,6 +1,6 @@
 name: ecapp
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -17,6 +17,7 @@ dependencies:
   hive_flutter: ^1.1.0
   image_picker: ^1.2.1
   jwt_decoder: ^2.0.1
+  razorpay_flutter: ^1.4.4
 
 dev_dependencies:
   flutter_test:

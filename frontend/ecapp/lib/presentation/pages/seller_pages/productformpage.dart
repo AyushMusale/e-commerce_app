@@ -12,24 +12,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-Widget stockButton(String text, bool selected, VoidCallback onTap) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: selected ? Colors.blue : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.blue),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(color: selected ? Colors.white : Colors.black),
-      ),
-    ),
-  );
-}
-
 Widget buildInputCard({required Widget child}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -54,9 +36,9 @@ class Productformpage extends StatefulWidget {
 class _ProductformpageState extends State<Productformpage> {
   final Set<int> selectedIndexes = {};
   final List<String> category = [];
-  bool inStock = true;
   TextEditingController nameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController stockController = TextEditingController(text: '10');
   @override
   Widget build(BuildContext context) {
     final categories = ["Electronics", "Mobile", "Accessories", "Fashion"];
@@ -203,28 +185,28 @@ class _ProductformpageState extends State<Productformpage> {
 
                     const SizedBox(height: 20),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "In Stock",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    Text(
+                      "Stock quantity",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    buildInputCard(
+                      child: TextField(
+                        controller: stockController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: false,
                         ),
-                        Row(
-                          children: [
-                            stockButton("Yes", inStock, () {
-                              setState(() => inStock = true);
-                            }),
-                            const SizedBox(width: 10),
-                            stockButton("No", !inStock, () {
-                              setState(() => inStock = false);
-                            }),
-                          ],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: const InputDecoration(
+                          hintText: "Units in stock (default 10)",
+                          border: InputBorder.none,
                         ),
-                      ],
+                      ),
                     ),
 
                     const SizedBox(height: 25),
@@ -347,11 +329,16 @@ class _ProductformpageState extends State<Productformpage> {
 
                           if (imageState is ImagestateSuccess) {
                             imagesList = imageState.Images;
+                            final parsedStock =
+                                int.tryParse(stockController.text.trim());
+                            final stockQty = parsedStock != null && parsedStock >= 0
+                                ? parsedStock
+                                : 10;
                             final NewProduct product = NewProduct(
                               name: nameController.text.trim().toLowerCase(),
                               price: priceController.text.trim(),
                               category: category,
-                              inStock: inStock,
+                              inStock: stockQty,
                               images: imagesList,
                             );
                             context.read<Newproductbloc>().add(

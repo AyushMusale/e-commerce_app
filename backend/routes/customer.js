@@ -15,6 +15,7 @@ const {
   StoreCustomerProfileHandler,
   getCustomerProfile,
 } = require("../handlers/customerprofile");
+const { CreateOrder, VerifyPayment } = require("../handlers/order");
 
 const router = express.Router();
 
@@ -31,5 +32,7 @@ router.post(
 );
 router.get("/profile", jwtAuth, getCustomerProfile);
 router.get("/search/:keyword", searchHandler);
+router.post("/order", jwtAuth, CreateOrder);
+router.post("/verify-payment", jwtAuth, VerifyPayment);
 
 module.exports = router;

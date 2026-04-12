@@ -1,4 +1,5 @@
 import 'package:ecapp/data/exceptions/authexception.dart';
+import 'package:ecapp/data/models/cart.dart';
 import 'package:ecapp/data/models/cartitems.dart';
 import 'package:ecapp/domain/usecases/cartusecase.dart';
 import 'package:ecapp/presentation/bloc/events/cartevent.dart';
@@ -14,11 +15,35 @@ class Cartbloc extends Bloc<Cartevent, CartState> {
         emit(state.copyWith(isLoading: true));
         final items = List<CartItem>.from(currentCart.cartItems);
         final index = items.indexWhere((i) => i.product.id == event.product.id);
+        final maxStock = event.product.inStock;
         if (index != -1) {
-          items[index] = items[index].copyWith(
-            quantity: items[index].quantity + event.quantity,
-          );
+          final newQty = items[index].quantity + event.quantity;
+          if (newQty > maxStock) {
+            emit(
+              state.copyWith(
+                isLoading: false,
+                error: true,
+                message: maxStock == 0
+                    ? 'Out of stock'
+                    : 'Only $maxStock in stock',
+              ),
+            );
+            return;
+          }
+          items[index] = items[index].copyWith(quantity: newQty);
         } else {
+          if (event.quantity > maxStock) {
+            emit(
+              state.copyWith(
+                isLoading: false,
+                error: true,
+                message: maxStock == 0
+                    ? 'Out of stock'
+                    : 'Only $maxStock in stock',
+              ),
+            );
+            return;
+          }
           items.add(CartItem(product: event.product, quantity: event.quantity));
         }
         final updatedCart = currentCart.copyWith(cartItems: items);
@@ -83,19 +108,19 @@ class Cartbloc extends Bloc<Cartevent, CartState> {
         if (e is UnauthenticatedException) {
           emit(
             CartState(
-              cart: state.cart,
+              cart: Cart(cartItems: []),
               error: true,
               message: 'unauthenticated',
             ),
           );
         } else {
-          emit(CartState(cart: state.cart, error: true, message: e.toString()));
+          emit(CartState(cart: Cart(cartItems: []), error: true, message: e.toString()));
         }
       }
     });
 
     on<GetCartEvent>((event, emit) async {
-      emit(CartState(cart: state.cart, isLoading: true));
+      emit(CartState(cart: Cart(cartItems: []), isLoading: true));
       try {
         final cart = await cartUsecase.getCart();
         emit(CartState(cart: cart, isLoading: false, message: 'success'));
@@ -109,7 +134,7 @@ class Cartbloc extends Bloc<Cartevent, CartState> {
             ),
           );
         } else {
-          emit(CartState(cart: state.cart, error: true, message: e.toString()));
+          emit(CartState(cart: Cart(cartItems: []), error: true, message: e.toString()));
         }
       }
     });

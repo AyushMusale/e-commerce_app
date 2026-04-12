@@ -8,18 +8,22 @@ import 'package:ecapp/data/repositires/cartrepo.dart';
 import 'package:ecapp/data/repositires/customerhomepagereppo.dart';
 import 'package:ecapp/data/repositires/customerprofilerepo.dart';
 import 'package:ecapp/data/repositires/fetchproductrepo.dart';
+import 'package:ecapp/data/repositires/fetchsellerproducts.dart';
+import 'package:ecapp/data/repositires/orderrepo.dart';
 import 'package:ecapp/data/repositires/newproductrepo.dart';
 import 'package:ecapp/data/repositires/registerrepo.dart';
 import 'package:ecapp/data/repositires/searchrepo.dart';
 import 'package:ecapp/data/repositires/sellerbankdetailsrepo.dart';
 import 'package:ecapp/data/repositires/sellerprofilerepo.dart';
-import 'package:ecapp/data/router/router.dart';
+import 'package:ecapp/domain/usecases/orderusecase.dart';
+import 'package:ecapp/presentation/pages/router/router.dart';
 import 'package:ecapp/domain/usecases/authusecase.dart';
 import 'package:ecapp/domain/usecases/bankdetailsusecase.dart';
 import 'package:ecapp/domain/usecases/cartusecase.dart';
 import 'package:ecapp/domain/usecases/customerhomepageusecase.dart';
 import 'package:ecapp/domain/usecases/customerprofileusecase.dart';
 import 'package:ecapp/domain/usecases/fetchproductusecase.dart';
+import 'package:ecapp/domain/usecases/fetchsellerproductsusecase.dart';
 import 'package:ecapp/domain/usecases/newproductusecase.dart';
 import 'package:ecapp/domain/usecases/registerusecase.dart';
 import 'package:ecapp/domain/usecases/searchusecase.dart';
@@ -30,6 +34,8 @@ import 'package:ecapp/presentation/bloc/bloc/cartbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/customerhomebloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/customerprofilebloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/fetchproductbloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/fetchsellerproductbloc.dart';
+import 'package:ecapp/presentation/bloc/bloc/orderbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/imagepickerbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/newproductbloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/registerbloc.dart';
@@ -73,8 +79,10 @@ void main() async {
   final bankDetailsRepo = Sellerbankdetailsrepo(client: authClient);
   final custoemrProfileRepo = CustomerProfileRepo(client: authClient);
   final searchRepo = SearchRepo(client: authClient);
-  
-    //usecase
+  final fetchSellerProductsRepo = FetchSellerProductsRepo(client: authClient);
+  final createOrderRepo = CreateOrderRepo(client: authClient);
+
+  //usecase
   final authusecase = Authusecase(authrepo);
   final registerusecase = Registerusecase(registerrepo);
   final newProductuseccase = Newproductusecase(newProductrepo);
@@ -84,11 +92,21 @@ void main() async {
   final getcustomerHomeDatausecase = GetCustomerHomepageDataUsecase(
     getCustomerHomepageDataRepo: getCustomerHomepageDataRepo,
   );
-  final fetchproductusecase = Fetchproductusecase(fetchproductRepo: fetchproductRepo);
+  final fetchproductusecase = Fetchproductusecase(
+    fetchproductRepo: fetchproductRepo,
+  );
   final cartUsecase = CartUsecase(cartRepo: cartRepo);
-  final bankdetailsusecase = SellerBankdetailsusecase(sellerbankdetailsrepo: bankDetailsRepo);
-  final customerProfileUsecase = CustomerProfileUsecase(customerProfileRepo:  custoemrProfileRepo);
+  final bankdetailsusecase = SellerBankdetailsusecase(
+    sellerbankdetailsrepo: bankDetailsRepo,
+  );
+  final customerProfileUsecase = CustomerProfileUsecase(
+    customerProfileRepo: custoemrProfileRepo,
+  );
   final searchUsecase = SearchUsecase(searchRepo: searchRepo);
+  final fetchSellerProductsUsecase = FetchSellerProductsUsecase(
+    fetchSellerProductsRepo: fetchSellerProductsRepo,
+  );
+  final orderusecase = Orderusecase(createOrderRepo: createOrderRepo);
 
   //bloc
   final sellerProfileBloc = SellerPRofileBloc(
@@ -105,12 +123,14 @@ void main() async {
       registerusecase: registerusecase,
       newproductusecase: newProductuseccase,
       sellerPRofileBloc: sellerProfileBloc,
-      getCustomerHomepageDataUsecase: getcustomerHomeDatausecase ,
+      getCustomerHomepageDataUsecase: getcustomerHomeDatausecase,
       fetchproductusecase: fetchproductusecase,
       cartUsecase: cartUsecase,
       sellerBankdetailsusecase: bankdetailsusecase,
       customerProfileUsecase: customerProfileUsecase,
       searchUsecase: searchUsecase,
+      fetchSellerProductsUsecase: fetchSellerProductsUsecase,
+      orderusecase: orderusecase,
     ),
   );
 }
@@ -127,6 +147,8 @@ class MainApp extends StatelessWidget {
   final SellerBankdetailsusecase sellerBankdetailsusecase;
   final CustomerProfileUsecase customerProfileUsecase;
   final SearchUsecase searchUsecase;
+  final FetchSellerProductsUsecase fetchSellerProductsUsecase;
+  final Orderusecase orderusecase;
 
   const MainApp({
     super.key,
@@ -141,6 +163,8 @@ class MainApp extends StatelessWidget {
     required this.sellerBankdetailsusecase,
     required this.customerProfileUsecase,
     required this.searchUsecase,
+    required this.fetchSellerProductsUsecase,
+    required this.orderusecase,
   });
 
   @override
@@ -153,12 +177,37 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (_) => Registerbloc(registerusecase)),
         BlocProvider(create: (_) => Imagepickerbloc()),
         BlocProvider(create: (_) => Newproductbloc(newproductusecase)),
-        BlocProvider(create: (_) => Customerhomebloc(getCustomerHomepageDataUsecase: getCustomerHomepageDataUsecase)),
-        BlocProvider(create: (_)=>Fetchproductbloc(fetchproductusecase: fetchproductusecase)),
-        BlocProvider(create: (_)=>Cartbloc(cartUsecase: cartUsecase)),
-        BlocProvider(create: (_)=>Bankdetailsbloc(sellerBankdetailsusecase: sellerBankdetailsusecase)),
-        BlocProvider(create: (_)=>CustomerProfileBLoc(customerProfileUsecase:  customerProfileUsecase)),
-        BlocProvider(create: (_)=>Searchbloc(searchUsecase: searchUsecase)),
+        BlocProvider(
+          create:
+              (_) => Customerhomebloc(
+                getCustomerHomepageDataUsecase: getCustomerHomepageDataUsecase,
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => Fetchproductbloc(fetchproductusecase: fetchproductusecase),
+        ),
+        BlocProvider(create: (_) => Cartbloc(cartUsecase: cartUsecase)),
+        BlocProvider(
+          create:
+              (_) => Bankdetailsbloc(
+                sellerBankdetailsusecase: sellerBankdetailsusecase,
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => CustomerProfileBLoc(
+                customerProfileUsecase: customerProfileUsecase,
+              ),
+        ),
+        BlocProvider(create: (_) => Searchbloc(searchUsecase: searchUsecase)),
+        BlocProvider(
+          create:
+              (_) => FetchSellerProductBloc(
+                fetchSellerProductsUsecase: fetchSellerProductsUsecase,
+              ),
+        ),
+        BlocProvider(create: (_) => OrderBloc(orderusecase: orderusecase)),
       ],
       child: MaterialApp.router(routerConfig: router),
     );

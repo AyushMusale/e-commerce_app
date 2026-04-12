@@ -193,6 +193,7 @@ class _ProductpageState extends State<Productpage> {
 
                         const SizedBox(height: 10),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -201,16 +202,18 @@ class _ProductpageState extends State<Productpage> {
                               ),
                               decoration: BoxDecoration(
                                 color:
-                                    product.instock!
+                                    product.isInStock
                                         ? Colors.green.shade50
                                         : Colors.red.shade50,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                product.instock! ? "In Stock" : "Out of Stock",
+                                product.isInStock
+                                    ? "In Stock"
+                                    : "Out of Stock",
                                 style: TextStyle(
                                   color:
-                                      product.instock!
+                                      product.isInStock
                                           ? Colors.green
                                           : Colors.red,
                                   fontSize: 12,
@@ -222,15 +225,26 @@ class _ProductpageState extends State<Productpage> {
                             const SizedBox(width: 10),
 
                             Icon(
-                              product.instock!
+                              product.isInStock
                                   ? Icons.check_circle
                                   : Icons.cancel,
                               size: 16,
                               color:
-                                  product.instock! ? Colors.green : Colors.red,
+                                  product.isInStock ? Colors.green : Colors.red,
                             ),
                           ],
                         ),
+                        if (product.inStock == 1) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            "Only 1 left in stock",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.deepOrange.shade800,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -314,14 +328,17 @@ class _ProductpageState extends State<Productpage> {
 
                               // ➕ Increase
                               IconButton(
-                                onPressed: () {
-                                  context.read<Cartbloc>().add(
-                                    AddToCartevent(
-                                      product: product,
-                                      quantity: 1,
-                                    ),
-                                  );
-                                },
+                                onPressed:
+                                    cartItem.quantity >= product.inStock
+                                        ? null
+                                        : () {
+                                            context.read<Cartbloc>().add(
+                                              AddToCartevent(
+                                                product: product,
+                                                quantity: 1,
+                                              ),
+                                            );
+                                          },
                                 icon: const Icon(Icons.add),
                               ),
                             ],
@@ -332,11 +349,16 @@ class _ProductpageState extends State<Productpage> {
                           height: dh * 0.06,
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: () {
-                              context.read<Cartbloc>().add(
-                                AddToCartevent(product: product, quantity: 1),
-                              );
-                            },
+                            onPressed: product.isInStock
+                                ? () {
+                                    context.read<Cartbloc>().add(
+                                      AddToCartevent(
+                                        product: product,
+                                        quantity: 1,
+                                      ),
+                                    );
+                                  }
+                                : null,
                             icon: const Icon(Icons.shopping_cart),
                             label: const Text(
                               "Add to Cart",
