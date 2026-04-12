@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { boolean } = require('zod');
 
 const productSchema = new mongoose.Schema({
     name:{
@@ -25,8 +24,9 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     inStock: {
-        type: boolean,
-        default: false
+        type: Number,
+        default: 10,
+        min: 0,
     },
     soldCount:{
         type: Number,

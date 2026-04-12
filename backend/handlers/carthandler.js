@@ -75,6 +75,7 @@ async function getCart(req, res) {
       };
     });
 
+    console.log('user id', id);
     return res.status(200).json({
       message: "success",
       cart_items: formatCart,
@@ -89,7 +90,7 @@ async function getCart(req, res) {
 async function removeCartItem(req, res) {
   try {
     const { id } = req.user;
-    const { product_id } = req.params;
+    const { product_id } = req.params;  
 
     if (!product_id) {
       return res.status(400).json({
