@@ -115,6 +115,6 @@ This ensures:
 
 📫 Contact
 1. GitHub: https://github.com/AyushMusale
-2. LinkedIn: https://www.linkedin.com/in/ayushmusale/
+2. LinkedIn: https://www.linkedin.com/in/ayushmusale
 
 > “Discipline over motivation. Systems over hacks.”
