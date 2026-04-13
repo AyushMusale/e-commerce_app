@@ -1,33 +1,6 @@
-import 'package:ecapp/data/local_data/local_data.dart';
 import 'package:ecapp/data/local_data/sellerprofiledata.dart';
-import 'package:ecapp/data/local_data/sellerprofiledb.dart';
-import 'package:ecapp/data/network/authclient.dart';
-import 'package:ecapp/data/network/authservice.dart';
-import 'package:ecapp/data/repositires/authrepo.dart';
-import 'package:ecapp/data/repositires/cartrepo.dart';
-import 'package:ecapp/data/repositires/customerhomepagereppo.dart';
-import 'package:ecapp/data/repositires/customerprofilerepo.dart';
-import 'package:ecapp/data/repositires/fetchproductrepo.dart';
-import 'package:ecapp/data/repositires/fetchsellerproducts.dart';
-import 'package:ecapp/data/repositires/orderrepo.dart';
-import 'package:ecapp/data/repositires/newproductrepo.dart';
-import 'package:ecapp/data/repositires/registerrepo.dart';
-import 'package:ecapp/data/repositires/searchrepo.dart';
-import 'package:ecapp/data/repositires/sellerbankdetailsrepo.dart';
-import 'package:ecapp/data/repositires/sellerprofilerepo.dart';
-import 'package:ecapp/domain/usecases/orderusecase.dart';
-import 'package:ecapp/presentation/pages/router/router.dart';
-import 'package:ecapp/domain/usecases/authusecase.dart';
-import 'package:ecapp/domain/usecases/bankdetailsusecase.dart';
-import 'package:ecapp/domain/usecases/cartusecase.dart';
-import 'package:ecapp/domain/usecases/customerhomepageusecase.dart';
-import 'package:ecapp/domain/usecases/customerprofileusecase.dart';
-import 'package:ecapp/domain/usecases/fetchproductusecase.dart';
-import 'package:ecapp/domain/usecases/fetchsellerproductsusecase.dart';
-import 'package:ecapp/domain/usecases/newproductusecase.dart';
-import 'package:ecapp/domain/usecases/registerusecase.dart';
-import 'package:ecapp/domain/usecases/searchusecase.dart';
-import 'package:ecapp/domain/usecases/sellerprofileusecase.dart';
+import 'package:ecapp/injection.dart';
+import 'package:ecapp/router.dart';
 import 'package:ecapp/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:ecapp/presentation/bloc/bloc/bankdetails.dart';
 import 'package:ecapp/presentation/bloc/bloc/cartbloc.dart';
@@ -55,116 +28,39 @@ void main() async {
   await Hive.openBox<SellerProfile>('sellerProfileDB');
   await Hive.openBox('authDb');
 
-  //DB
-  final authDB = AuthDB();
-  final sellerProfileDB = SellerProfileDB();
-
-  //services && client
-  final authService = AuthService(authDB);
-  final authClient = AuthClient(authService);
-
-  //repo
-  final authrepo = Authrepo(authDB);
-  final registerrepo = Registerrepo();
-  final newProductrepo = Newproductrepo(authDB: authDB, authClient: authClient);
-  final sellerProfilerepo = SellerProfileRepo(
-    client: authClient,
-    sellerProfileDB: sellerProfileDB,
-  );
-  final getCustomerHomepageDataRepo = GetCustomerHomepageDataRepo(
-    client: authClient,
-  );
-  final fetchproductRepo = FetchproductRepo(client: authClient);
-  final cartRepo = CartRepo(clinet: authClient);
-  final bankDetailsRepo = Sellerbankdetailsrepo(client: authClient);
-  final custoemrProfileRepo = CustomerProfileRepo(client: authClient);
-  final searchRepo = SearchRepo(client: authClient);
-  final fetchSellerProductsRepo = FetchSellerProductsRepo(client: authClient);
-  final createOrderRepo = CreateOrderRepo(client: authClient);
-
-  //usecase
-  final authusecase = Authusecase(authrepo);
-  final registerusecase = Registerusecase(registerrepo);
-  final newProductuseccase = Newproductusecase(newProductrepo);
-  final sellerProfileusecase = SellerProfileUsecase(
-    sellerProfileRepo: sellerProfilerepo,
-  );
-  final getcustomerHomeDatausecase = GetCustomerHomepageDataUsecase(
-    getCustomerHomepageDataRepo: getCustomerHomepageDataRepo,
-  );
-  final fetchproductusecase = Fetchproductusecase(
-    fetchproductRepo: fetchproductRepo,
-  );
-  final cartUsecase = CartUsecase(cartRepo: cartRepo);
-  final bankdetailsusecase = SellerBankdetailsusecase(
-    sellerbankdetailsrepo: bankDetailsRepo,
-  );
-  final customerProfileUsecase = CustomerProfileUsecase(
-    customerProfileRepo: custoemrProfileRepo,
-  );
-  final searchUsecase = SearchUsecase(searchRepo: searchRepo);
-  final fetchSellerProductsUsecase = FetchSellerProductsUsecase(
-    fetchSellerProductsRepo: fetchSellerProductsRepo,
-  );
-  final orderusecase = Orderusecase(createOrderRepo: createOrderRepo);
+  final injection = Injection();
+  await injection.init();
 
   //bloc
   final sellerProfileBloc = SellerPRofileBloc(
-    sellerProfileDB: sellerProfileDB,
-    sellerProfileUsecase: sellerProfileusecase,
+    sellerProfileDB: injection.sellerProfileDB,
+    sellerProfileUsecase: injection.sellerProfileUsecase,
   );
-  final authbloc = Authbloc(authusecase, authDB)..add(AuthChecksession());
+  final authbloc = Authbloc(injection.authusecase, injection.authDB)..add(AuthChecksession());
   final router = createRouter(authbloc);
 
   runApp(
     MainApp(
       authbloc: authbloc,
       router: router,
-      registerusecase: registerusecase,
-      newproductusecase: newProductuseccase,
-      sellerPRofileBloc: sellerProfileBloc,
-      getCustomerHomepageDataUsecase: getcustomerHomeDatausecase,
-      fetchproductusecase: fetchproductusecase,
-      cartUsecase: cartUsecase,
-      sellerBankdetailsusecase: bankdetailsusecase,
-      customerProfileUsecase: customerProfileUsecase,
-      searchUsecase: searchUsecase,
-      fetchSellerProductsUsecase: fetchSellerProductsUsecase,
-      orderusecase: orderusecase,
+      injection: injection,
+      sellerProfileBloc: sellerProfileBloc,
     ),
   );
 }
 
 class MainApp extends StatelessWidget {
   final Authbloc authbloc;
-  final SellerPRofileBloc sellerPRofileBloc;
   final GoRouter router;
-  final Registerusecase registerusecase;
-  final Newproductusecase newproductusecase;
-  final GetCustomerHomepageDataUsecase getCustomerHomepageDataUsecase;
-  final Fetchproductusecase fetchproductusecase;
-  final CartUsecase cartUsecase;
-  final SellerBankdetailsusecase sellerBankdetailsusecase;
-  final CustomerProfileUsecase customerProfileUsecase;
-  final SearchUsecase searchUsecase;
-  final FetchSellerProductsUsecase fetchSellerProductsUsecase;
-  final Orderusecase orderusecase;
+  final Injection injection;
+  final SellerPRofileBloc sellerProfileBloc;
 
   const MainApp({
     super.key,
     required this.authbloc,
     required this.router,
-    required this.registerusecase,
-    required this.newproductusecase,
-    required this.sellerPRofileBloc,
-    required this.getCustomerHomepageDataUsecase,
-    required this.fetchproductusecase,
-    required this.cartUsecase,
-    required this.sellerBankdetailsusecase,
-    required this.customerProfileUsecase,
-    required this.searchUsecase,
-    required this.fetchSellerProductsUsecase,
-    required this.orderusecase,
+    required this.injection,
+    required this.sellerProfileBloc,
   });
 
   @override
@@ -172,42 +68,42 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: authbloc),
-        BlocProvider.value(value: sellerPRofileBloc),
+        BlocProvider.value(value: sellerProfileBloc),
 
-        BlocProvider(create: (_) => Registerbloc(registerusecase)),
+        BlocProvider(create: (_) => Registerbloc(injection.registerusecase)),
         BlocProvider(create: (_) => Imagepickerbloc()),
-        BlocProvider(create: (_) => Newproductbloc(newproductusecase)),
+        BlocProvider(create: (_) => Newproductbloc(injection.newproductusecase)),
         BlocProvider(
           create:
               (_) => Customerhomebloc(
-                getCustomerHomepageDataUsecase: getCustomerHomepageDataUsecase,
+                getCustomerHomepageDataUsecase: injection.customerHomepageUsecase,
               ),
         ),
         BlocProvider(
           create:
-              (_) => Fetchproductbloc(fetchproductusecase: fetchproductusecase),
+              (_) => Fetchproductbloc(fetchproductusecase: injection.fetchproductUsecase),
         ),
-        BlocProvider(create: (_) => Cartbloc(cartUsecase: cartUsecase)),
+        BlocProvider(create: (_) => Cartbloc(cartUsecase: injection.cartUsecase)),
         BlocProvider(
           create:
               (_) => Bankdetailsbloc(
-                sellerBankdetailsusecase: sellerBankdetailsusecase,
+                sellerBankdetailsusecase: injection.bankDetailsUsecase,
               ),
         ),
         BlocProvider(
           create:
               (_) => CustomerProfileBLoc(
-                customerProfileUsecase: customerProfileUsecase,
+                customerProfileUsecase: injection.customerProfileUsecase,
               ),
         ),
-        BlocProvider(create: (_) => Searchbloc(searchUsecase: searchUsecase)),
+        BlocProvider(create: (_) => Searchbloc(searchUsecase: injection.searchUsecase)),
         BlocProvider(
           create:
               (_) => FetchSellerProductBloc(
-                fetchSellerProductsUsecase: fetchSellerProductsUsecase,
+                fetchSellerProductsUsecase: injection.fetchSellerProductsUsecase,
               ),
         ),
-        BlocProvider(create: (_) => OrderBloc(orderusecase: orderusecase)),
+        BlocProvider(create: (_) => OrderBloc(orderusecase: injection.orderUsecase)),
       ],
       child: MaterialApp.router(routerConfig: router),
     );
